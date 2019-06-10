@@ -1,0 +1,14 @@
+C:\Users\trinh\source\repos\Crawler\bin\Debug\netcoreapp2.2\Crawler.deps.json
+C:\Users\trinh\source\repos\Crawler\bin\Debug\netcoreapp2.2\Crawler.runtimeconfig.json
+C:\Users\trinh\source\repos\Crawler\bin\Debug\netcoreapp2.2\Crawler.runtimeconfig.dev.json
+C:\Users\trinh\source\repos\Crawler\bin\Debug\netcoreapp2.2\Crawler.dll
+C:\Users\trinh\source\repos\Crawler\bin\Debug\netcoreapp2.2\Crawler.pdb
+C:\Users\trinh\source\repos\Crawler\obj\Debug\netcoreapp2.2\Crawler.csprojAssemblyReference.cache
+C:\Users\trinh\source\repos\Crawler\obj\Debug\netcoreapp2.2\Crawler.csproj.CoreCompileInputs.cache
+C:\Users\trinh\source\repos\Crawler\obj\Debug\netcoreapp2.2\Crawler.RazorAssemblyInfo.cache
+C:\Users\trinh\source\repos\Crawler\obj\Debug\netcoreapp2.2\Crawler.RazorAssemblyInfo.cs
+C:\Users\trinh\source\repos\Crawler\obj\Debug\netcoreapp2.2\Crawler.AssemblyInfoInputs.cache
+C:\Users\trinh\source\repos\Crawler\obj\Debug\netcoreapp2.2\Crawler.AssemblyInfo.cs
+C:\Users\trinh\source\repos\Crawler\obj\Debug\netcoreapp2.2\Crawler.RazorTargetAssemblyInfo.cache
+C:\Users\trinh\source\repos\Crawler\obj\Debug\netcoreapp2.2\Crawler.dll
+C:\Users\trinh\source\repos\Crawler\obj\Debug\netcoreapp2.2\Crawler.pdb

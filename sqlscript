@@ -1,0 +1,9 @@
+USE [corpus]
+-- Select rows from a Tabl[new]' in schema 'SchemaName'
+SELECT * FROM News
+GO
+
+-- Delete rows from table 'News'
+DELETE FROM News
+WHERE Id = '9' or Id = '10'	/* add search conditions here */
+GO
