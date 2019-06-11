@@ -100,7 +100,7 @@ namespace Crawler.Models
         {
             ////*[contains(@class, "prj-noidung")]/div/p
             var doc = await GetDocuments(url);
-            string title = "", description = "", contents = "", author = "", source = string.Empty;
+            string title = "", contents = "";
             title = doc.DocumentNode.SelectSingleNode("//*[contains(@class, \"prj-noidung\")]/div/h2") != null ? doc.DocumentNode.SelectSingleNode("//*[contains(@class, \"prj-noidung\")]/div/h2").InnerText : null;
             title = title != null ? title : doc.DocumentNode.SelectSingleNode("//*[contains(@class, \"prj-noidung\")]/h2").InnerText;
             title = Decode(title);
@@ -111,14 +111,9 @@ namespace Crawler.Models
             {
                 contents += para != null ? Decode(para.InnerText) : string.Empty;
             }
-            // author = doc.DocumentNode.SelectSingleNode("//*[@id=\"left_calculator\"]/article/p/strong") != null ? doc.DocumentNode.SelectSingleNode("//*[@id=\"left_calculator\"]/article/p/strong").InnerText : string.Empty;
-            // source = doc.DocumentNode.SelectSingleNode("//*[@id=\"left_calculator\"]/article/p/em") != null ? doc.DocumentNode.SelectSingleNode("//*[@id=\"left_calculator\"]/article/p/em").InnerText : string.Empty;
             return new New{
-                Author = author,
                 Title = title,
-                Description = description,
-                Contents = contents,
-                Source = source,
+                Contents = contents
             };
         }
         //NOTE decode special html characters
