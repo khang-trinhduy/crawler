@@ -93,7 +93,7 @@ namespace Crawler.Controllers
                     if (news != null)
                     {
                         foreach (var n in news)
-                        {
+                        {   
                             var exist = _context.News.FirstOrDefault(e => e.Url == n.Url && e.Title == n.Title);
                             if (exist == null)
                             {

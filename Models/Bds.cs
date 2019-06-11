@@ -10,9 +10,47 @@ namespace Crawler.Models
     {
         public override async Task<List<New>> GetTopNews(int quantity, string type)
         {
+            //covp: cao-oc-van-phong, tttm: trung-tam-thuong-mai, kdtm: khu-do-thi-moi, kph: khu-phuc-hop, noxh: nha-o-xa-hoi, 
+            //kndst: khu-nghi-duong-sinh-thai, kcn: khu-cong-nghiep, dak: du-an-khac, btlk: biet-thu-lien-ke
             if (type == "chcc")
             {
                 SetUrl("https://batdongsan.com.vn/can-ho-chung-cu");
+            }
+            else if (type == "covp")
+            {
+                SetUrl("https://batdongsan.com.vn/cao-oc-van-phong");                
+            }
+            else if (type == "tttm")
+            {
+                SetUrl("https://batdongsan.com.vn/trung-tam-thuong-mai");                
+            }
+            else if (type == "kdtm")
+            {
+                SetUrl("https://batdongsan.com.vn/khu-do-thi-moi");                
+            }
+            else if (type == "kph")
+            {
+                SetUrl("https://batdongsan.com.vn/khu-phuc-hop");                
+            }
+            else if (type == "noxh")
+            {
+                SetUrl("https://batdongsan.com.vn/nha-o-xa-hoi");                
+            }
+            else if (type == "kndst")
+            {
+                SetUrl("https://batdongsan.com.vn/khu-nghi-duong-sinh-thai");                
+            }
+            else if (type == "kcn")
+            {
+                SetUrl("https://batdongsan.com.vn/khu-cong-nghiep");                
+            }
+            else if (type == "dak")
+            {
+                SetUrl("https://batdongsan.com.vn/du-an-khac");                
+            }
+            else if (type == "btlk")
+            {
+                SetUrl("https://batdongsan.com.vn/biet-thu-lien-ke");           
             }
             return await GetNews(quantity);
         }
@@ -45,7 +83,7 @@ namespace Crawler.Models
         private async Task<HtmlDocument> GetDocuments(string url)
         {
             HttpClient client = new HttpClient();
-            client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36");
+            client.DefaultRequestHeaders.Add("User-Agent", "Chrome/51.0.2704.103");
             var mainPage = await client.GetStringAsync(url);
             HtmlDocument docs = new HtmlDocument();
             docs.LoadHtml(mainPage);
@@ -60,14 +98,18 @@ namespace Crawler.Models
 
         private async Task<New> GetContents(string url)
         {
+            ////*[contains(@class, "prj-noidung")]/div/p
             var doc = await GetDocuments(url);
             string title = "", description = "", contents = "", author = "", source = string.Empty;
-            title = doc.DocumentNode.SelectSingleNode("//*[contains(@class, \"prj_noidung\")]/h2/strong") != null ? doc.DocumentNode.SelectSingleNode("///*[@id=\"form1\"]/div[4]/div[8]/div[1]/h2/strong").InnerText : string.Empty;
+            title = doc.DocumentNode.SelectSingleNode("//*[contains(@class, \"prj-noidung\")]/div/h2") != null ? doc.DocumentNode.SelectSingleNode("//*[contains(@class, \"prj-noidung\")]/div/h2").InnerText : null;
+            title = title != null ? title : doc.DocumentNode.SelectSingleNode("//*[contains(@class, \"prj-noidung\")]/h2").InnerText;
+            title = Decode(title);
             // description = doc.DocumentNode.SelectSingleNode("//*[contains(@class, 'description')]") != null ? doc.DocumentNode.SelectSingleNode("//*[contains(@class, 'description')]").InnerText : string.Empty;
-            var paragraphs = doc.DocumentNode.SelectNodes("//*[@id=\"form1\"]/div[4]/div[8]/div[1]/p");
+            var paragraphs = doc.DocumentNode.SelectNodes("//*[contains(@class, \"prj-noidung\")]/p") != null ? doc.DocumentNode.SelectNodes("//*[contains(@class, \"prj-noidung\")]/p") : null;
+            paragraphs = paragraphs != null ? paragraphs : doc.DocumentNode.SelectNodes("//*[contains(@class, \"prj-noidung\")]/div/p");
             foreach (var para in paragraphs)
             {
-                contents += para != null ? para.InnerText : string.Empty;
+                contents += para != null ? Decode(para.InnerText) : string.Empty;
             }
             // author = doc.DocumentNode.SelectSingleNode("//*[@id=\"left_calculator\"]/article/p/strong") != null ? doc.DocumentNode.SelectSingleNode("//*[@id=\"left_calculator\"]/article/p/strong").InnerText : string.Empty;
             // source = doc.DocumentNode.SelectSingleNode("//*[@id=\"left_calculator\"]/article/p/em") != null ? doc.DocumentNode.SelectSingleNode("//*[@id=\"left_calculator\"]/article/p/em").InnerText : string.Empty;
@@ -78,6 +120,11 @@ namespace Crawler.Models
                 Contents = contents,
                 Source = source,
             };
+        }
+        //NOTE decode special html characters
+        private string Decode(string strToDecode)
+        {
+            return System.Net.WebUtility.HtmlDecode(strToDecode);
         }
 
         public override string GetUrl()
