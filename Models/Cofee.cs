@@ -97,7 +97,7 @@ namespace Crawler.Models
             string title = "", description = "", contents = "", author = "", source = string.Empty;
             title = doc.DocumentNode.SelectSingleNode("//div[contains(@class, \"left_cate\")]/*[contains(@class, \"title\")]") != null ? doc.DocumentNode.SelectSingleNode("//div[contains(@class, \"left_cate\")]/*[contains(@class, \"title\")]").InnerText : string.Empty;
             description = doc.DocumentNode.SelectSingleNode("//*[contains(@class, 'sapo')]") != null ? doc.DocumentNode.SelectSingleNode("//*[contains(@class, 'sapo')]").InnerText : string.Empty;
-            var paragraphs = doc.DocumentNode.SelectNodes("//*[@id=\"mainContent\"]/p");
+            var paragraphs = doc.DocumentNode.SelectNodes("//*[@id=\"mainContent\"]/p") != null ? doc.DocumentNode.SelectNodes("//*[@id=\"mainContent\"]/p") : null;
             foreach (var para in paragraphs)
             {
                 contents += para != null ? para.InnerText : string.Empty;

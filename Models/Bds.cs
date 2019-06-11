@@ -136,10 +136,8 @@ namespace Crawler.Models
             }
             catch (System.Exception)
             {
-                
-                throw;
+                return false;
             }
-            return false;
         }
 
         public override Task<string> Template(string url)
