@@ -24,30 +24,37 @@ namespace Crawler.Controllers
         {
             _context = context;
         }
-
-        // GET api/values
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<string>>> Get()
+        [Route("")] 
+        public async Task<ActionResult<IEnumerable<New>>> Get([FromQuery]string sort, [FromQuery]string category, [FromQuery]string search, [FromQuery]int page)
         {
-            var url = "https://vnexpress.net/";
-            var client = new HttpClient();
-            var contents = await client.GetStringAsync(url);
-            var document = new HtmlDocument();
-            document.LoadHtml(contents);
-            var nodes = document.DocumentNode.SelectNodes("//*[@id=\"main_menu\"]/a").ToList();
-            List<string> links = new List<string>();
-            foreach (var node in nodes)
+            var news = _context.News.Where(e => true);
+            if (SortById(sort))
             {
-                links.Add(node.Attributes["href"].Value);
+                if (SortByDescending(sort))
+                {
+                    news = news.OrderByDescending(n => n.Id);
+                }
+                else
+                {
+                    news = news.OrderBy(n => n.Id);
+                }
             }
-            var tempFile = Path.GetTempPath() + "template.html";
-            // StreamWriter wt = new StreamWriter(tempFile);
-            // wt.Write(document.DocumentNode.InnerHtml);
-            // wt.Close();
-            // Process.Start(@"cmd.exe ",@"/c " + tempFile);
-            // var nav = document.DocumentNode.SelectNodes("//*[@id=\"main_menu\"]/a");
-            
-            return Ok(links);
+            else if (sort == "id-asce")
+            {
+                news = news.OrderBy(n => n.Id);
+            }
+            return Ok();
+        }
+
+        private static bool SortByDescending(string sort)
+        {
+            return sort.Split("-")[1] == "asce";
+        }
+
+        private static bool SortById(string sort)
+        {
+            return sort.Split("-")[0] == "id";
         }
 
         [HttpGet]
@@ -69,7 +76,7 @@ namespace Crawler.Controllers
                             if (exist == null)
                             {
                                 _context.News.Add(n);
-                                
+
                             }
                         }
                         try
@@ -78,7 +85,7 @@ namespace Crawler.Controllers
                         }
                         catch (Exception e)
                         {
-                            
+
                             throw new Exception(e.Message);
                         }
                         return Ok(news);
@@ -93,12 +100,12 @@ namespace Crawler.Controllers
                     if (news != null)
                     {
                         foreach (var n in news)
-                        {   
+                        {
                             var exist = _context.News.FirstOrDefault(e => e.Url == n.Url && e.Title == n.Title);
                             if (exist == null)
                             {
                                 _context.News.Add(n);
-                                
+
                             }
                         }
                         try
@@ -107,7 +114,7 @@ namespace Crawler.Controllers
                         }
                         catch (Exception e)
                         {
-                            
+
                             throw new Exception(e.Message);
                         }
                         return Ok(news);
@@ -127,7 +134,7 @@ namespace Crawler.Controllers
                             if (exist == null)
                             {
                                 _context.News.Add(n);
-                                
+
                             }
                         }
                         try
@@ -136,7 +143,7 @@ namespace Crawler.Controllers
                         }
                         catch (Exception e)
                         {
-                            
+
                             throw new Exception(e.Message);
                         }
                         return Ok(news);
@@ -165,7 +172,7 @@ namespace Crawler.Controllers
             StreamWriter wt = new StreamWriter(tempFile);
             wt.Write(template);
             wt.Close();
-            Process.Start(@"cmd.exe ",@"/c " + tempFile);
+            Process.Start(@"cmd.exe ", @"/c " + tempFile);
             return Ok(template);
         }
 

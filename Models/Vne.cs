@@ -76,14 +76,15 @@ namespace Crawler.Models
             string title = "", description = "", contents = "", author = "", source = string.Empty;
             title = doc.DocumentNode.SelectSingleNode("//*[@id=\"left_calculator\"]/h1") != null ? doc.DocumentNode.SelectSingleNode("//*[@id=\"left_calculator\"]/h1").InnerText : string.Empty;
             description = doc.DocumentNode.SelectSingleNode("//*[contains(@class, 'description')]") != null ? doc.DocumentNode.SelectSingleNode("//*[contains(@class, 'description')]").InnerText : string.Empty;
-            var paragraphs = doc.DocumentNode.SelectNodes("//*[@id=\"left_calculator\"]/article/p") != null ? doc.DocumentNode.SelectNodes("//*[@id=\"left_calculator\"]/article/p"): null;
+            var paragraphs = doc.DocumentNode.SelectNodes("//*[@id=\"left_calculator\"]/article/p") != null ? doc.DocumentNode.SelectNodes("//*[@id=\"left_calculator\"]/article/p") : null;
             foreach (var para in paragraphs)
             {
                 contents += para != null ? para.InnerText : string.Empty;
             }
             author = doc.DocumentNode.SelectSingleNode("//*[@id=\"left_calculator\"]/article/p/strong") != null ? doc.DocumentNode.SelectSingleNode("//*[@id=\"left_calculator\"]/article/p/strong").InnerText : string.Empty;
             source = doc.DocumentNode.SelectSingleNode("//*[@id=\"left_calculator\"]/article/p/em") != null ? doc.DocumentNode.SelectSingleNode("//*[@id=\"left_calculator\"]/article/p/em").InnerText : string.Empty;
-            return new New{
+            return new New
+            {
                 Author = author,
                 Title = title,
                 Description = description,
@@ -106,7 +107,7 @@ namespace Crawler.Models
             }
             catch (System.Exception)
             {
-                
+
                 throw new Exception("can't get url!");
             }
         }

@@ -7,7 +7,7 @@ namespace Crawler.Data
     {
         public DbSet<New> News { get; set; }
         public DbSet<Website> Sites { get; set; }
-        public CrawlerContext (DbContextOptions<CrawlerContext> options)
+        public CrawlerContext(DbContextOptions<CrawlerContext> options)
             : base(options)
         {
         }

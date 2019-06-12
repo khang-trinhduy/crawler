@@ -20,43 +20,43 @@ namespace Crawler.Models
         // 12
         public override async Task<List<New>> GetTopNews(int quantity, string type)
         {
-             if (type == "ck")
-             {
-                 SetUrl("http://cafef.vn/timeline/31/trang-1.chn");
-             }
-             else if (type == "ts")
-             {
-                 SetUrl("http://cafef.vn/timeline/112/trang-1.chn");
-             }
-             else if (type == "bds")
-             {
-                 SetUrl("http://cafef.vn/timeline/35/trang-1.chn");
-             }
-             else if (type == "dn")
-             {
-                 SetUrl("http://cafef.vn/timeline/36/trang-1.chn");
-             }
-             else if (type == "nh")
-             {
-                 SetUrl("http://cafef.vn/timeline/34/trang-1.chn");
-             }
-             else if (type == "tcqt")
-             {
-                 SetUrl("http://cafef.vn/timeline/32/trang-1.chn");
-             }
-             else if (type == "vm")
-             {
-                 SetUrl("http://cafef.vn/timeline/33/trang-1.chn");
-             }
-             else if (type == "s")
-             {
-                 SetUrl("http://cafef.vn/timeline/114/trang-1.chn");
-             }
-             else if (type == "tt")
-             {
-                 SetUrl("http://cafef.vn/timeline/39/trang-1.chn");
-             }
-             return await GetNews(quantity);
+            if (type == "ck")
+            {
+                SetUrl("http://cafef.vn/timeline/31/trang-1.chn");
+            }
+            else if (type == "ts")
+            {
+                SetUrl("http://cafef.vn/timeline/112/trang-1.chn");
+            }
+            else if (type == "bds")
+            {
+                SetUrl("http://cafef.vn/timeline/35/trang-1.chn");
+            }
+            else if (type == "dn")
+            {
+                SetUrl("http://cafef.vn/timeline/36/trang-1.chn");
+            }
+            else if (type == "nh")
+            {
+                SetUrl("http://cafef.vn/timeline/34/trang-1.chn");
+            }
+            else if (type == "tcqt")
+            {
+                SetUrl("http://cafef.vn/timeline/32/trang-1.chn");
+            }
+            else if (type == "vm")
+            {
+                SetUrl("http://cafef.vn/timeline/33/trang-1.chn");
+            }
+            else if (type == "s")
+            {
+                SetUrl("http://cafef.vn/timeline/114/trang-1.chn");
+            }
+            else if (type == "tt")
+            {
+                SetUrl("http://cafef.vn/timeline/39/trang-1.chn");
+            }
+            return await GetNews(quantity);
         }
         private async Task<List<New>> GetNews(int quantity)
         {
@@ -104,7 +104,8 @@ namespace Crawler.Models
             }
             author = doc.DocumentNode.SelectSingleNode("//*[@id=\"contentdetail\"]/p[1]") != null ? doc.DocumentNode.SelectSingleNode("//*[@id=\"contentdetail\"]/p[1]").InnerText : string.Empty;
             source = doc.DocumentNode.SelectSingleNode("//*[@id=\"contentdetail\"]/p[2]") != null ? doc.DocumentNode.SelectSingleNode("//*[@id=\"contentdetail\"]/p[2]").InnerText : string.Empty;
-            return new New{
+            return new New
+            {
                 Author = author,
                 Title = title,
                 Description = description,

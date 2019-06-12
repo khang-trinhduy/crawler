@@ -18,39 +18,39 @@ namespace Crawler.Models
             }
             else if (type == "covp")
             {
-                SetUrl("https://batdongsan.com.vn/cao-oc-van-phong");                
+                SetUrl("https://batdongsan.com.vn/cao-oc-van-phong");
             }
             else if (type == "tttm")
             {
-                SetUrl("https://batdongsan.com.vn/trung-tam-thuong-mai");                
+                SetUrl("https://batdongsan.com.vn/trung-tam-thuong-mai");
             }
             else if (type == "kdtm")
             {
-                SetUrl("https://batdongsan.com.vn/khu-do-thi-moi");                
+                SetUrl("https://batdongsan.com.vn/khu-do-thi-moi");
             }
             else if (type == "kph")
             {
-                SetUrl("https://batdongsan.com.vn/khu-phuc-hop");                
+                SetUrl("https://batdongsan.com.vn/khu-phuc-hop");
             }
             else if (type == "noxh")
             {
-                SetUrl("https://batdongsan.com.vn/nha-o-xa-hoi");                
+                SetUrl("https://batdongsan.com.vn/nha-o-xa-hoi");
             }
             else if (type == "kndst")
             {
-                SetUrl("https://batdongsan.com.vn/khu-nghi-duong-sinh-thai");                
+                SetUrl("https://batdongsan.com.vn/khu-nghi-duong-sinh-thai");
             }
             else if (type == "kcn")
             {
-                SetUrl("https://batdongsan.com.vn/khu-cong-nghiep");                
+                SetUrl("https://batdongsan.com.vn/khu-cong-nghiep");
             }
             else if (type == "dak")
             {
-                SetUrl("https://batdongsan.com.vn/du-an-khac");                
+                SetUrl("https://batdongsan.com.vn/du-an-khac");
             }
             else if (type == "btlk")
             {
-                SetUrl("https://batdongsan.com.vn/biet-thu-lien-ke");           
+                SetUrl("https://batdongsan.com.vn/biet-thu-lien-ke");
             }
             return await GetNews(quantity);
         }
@@ -111,7 +111,8 @@ namespace Crawler.Models
             {
                 contents += para != null ? Decode(para.InnerText) : string.Empty;
             }
-            return new New{
+            return new New
+            {
                 Title = title,
                 Contents = contents
             };
