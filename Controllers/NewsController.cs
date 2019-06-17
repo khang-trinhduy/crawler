@@ -21,7 +21,16 @@ namespace Crawler.Controllers
         public async Task<ActionResult<IEnumerable<New>>> Get([FromQuery]string sort, [FromQuery]string search, [FromQuery]string filter, [FromQuery]int page)
         {
             var news = _context.News.Where(e => true);
+            if (NewMethod(sort))
+            {
+
+            }
             return Ok();
+        }
+
+        private static bool NewMethod(string sort)
+        {
+            return sort.Split("-")[0] == "id";
         }
     }
 }
