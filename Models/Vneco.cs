@@ -54,8 +54,8 @@ namespace Crawler.Models
             List<New> news = new List<New>();
             for (int i = 0; i < quantity; i++)
             {
-                var n = await GetContents("http://cafef.vn/" + links[i]);
-                n.Url = "http://cafef.vn/" + links[i];
+                var n = await GetContents("http://vneconomy.vn/" + links[i]);
+                n.Url = "http://vneconomy.vn/" + links[i];
                 news.Add(n);
             }
             return news;
@@ -72,7 +72,7 @@ namespace Crawler.Models
         {
             var doc = await GetDocuments(url);
             string title = "", description = "", contents = "", author = "", source = string.Empty;
-            title = doc.DocumentNode.SelectSingleNode("//div[contains(@class, \"left_cate\")]/*[contains(@class, \"title\")]") != null ? doc.DocumentNode.SelectSingleNode("//div[contains(@class, \"left_cate\")]/*[contains(@class, \"title\")]").InnerText : string.Empty;
+            title = doc.DocumentNode.SelectSingleNode("//div[contains(@class, \"contentleft\")]/*[contains(@class, \"title\")]") != null ? doc.DocumentNode.SelectSingleNode("//div[contains(@class, \"left_cate\")]/*[contains(@class, \"title\")]").InnerText : string.Empty;
             description = doc.DocumentNode.SelectSingleNode("//*[contains(@class, 'sapo')]") != null ? doc.DocumentNode.SelectSingleNode("//*[contains(@class, 'sapo')]").InnerText : string.Empty;
             var paragraphs = doc.DocumentNode.SelectNodes("//*[@id=\"mainContent\"]/p") != null ? doc.DocumentNode.SelectNodes("//*[@id=\"mainContent\"]/p") : null;
             foreach (var para in paragraphs)

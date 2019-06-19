@@ -73,16 +73,17 @@ namespace Crawler.Models
         private async Task<New> GetContents(string url)
         {
             var doc = await GetDocuments(url);
-            string title = "", description = "", contents = "", author = "", source = string.Empty;
-            title = doc.DocumentNode.SelectSingleNode("//*[@id=\"left_calculator\"]/h1") != null ? doc.DocumentNode.SelectSingleNode("//*[@id=\"left_calculator\"]/h1").InnerText : string.Empty;
-            description = doc.DocumentNode.SelectSingleNode("//*[contains(@class, 'description')]") != null ? doc.DocumentNode.SelectSingleNode("//*[contains(@class, 'description')]").InnerText : string.Empty;
+            string title = "", description = "", contents = "", author = "", source = string.Empty, rendered = "";
+            title = doc.DocumentNode.SelectSingleNode("//*[@id=\"left_calculator\"]/h1") != null ? doc.DocumentNode.SelectSingleNode("//*[@id=\"left_calculator\"]/h1").OuterHtml : string.Empty;
+            description = doc.DocumentNode.SelectSingleNode("//*[contains(@class, 'description')]") != null ? doc.DocumentNode.SelectSingleNode("//*[contains(@class, 'description')]").OuterHtml : string.Empty;
             var paragraphs = doc.DocumentNode.SelectNodes("//*[@id=\"left_calculator\"]/article/p") != null ? doc.DocumentNode.SelectNodes("//*[@id=\"left_calculator\"]/article/p") : null;
             foreach (var para in paragraphs)
             {
-                contents += para != null ? para.InnerText : string.Empty;
+                contents += para != null ? para.OuterHtml : string.Empty;
             }
             author = doc.DocumentNode.SelectSingleNode("//*[@id=\"left_calculator\"]/article/p/strong") != null ? doc.DocumentNode.SelectSingleNode("//*[@id=\"left_calculator\"]/article/p/strong").InnerText : string.Empty;
             source = doc.DocumentNode.SelectSingleNode("//*[@id=\"left_calculator\"]/article/p/em") != null ? doc.DocumentNode.SelectSingleNode("//*[@id=\"left_calculator\"]/article/p/em").InnerText : string.Empty;
+            rendered = doc.DocumentNode.SelectSingleNode("//*[contains(@class, 'sidebar_1')]/article") != null ? doc.DocumentNode.SelectSingleNode("//*[contains(@class, 'sidebar_1')]/article").OuterHtml : string.Empty;
             return new New
             {
                 Author = author,
@@ -90,6 +91,7 @@ namespace Crawler.Models
                 Description = description,
                 Contents = contents,
                 Source = source,
+                Rendered = rendered
             };
         }
 

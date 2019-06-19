@@ -100,13 +100,14 @@ namespace Crawler.Models
         {
             ////*[contains(@class, "prj-noidung")]/div/p
             var doc = await GetDocuments(url);
-            string title = "", contents = "";
-            title = doc.DocumentNode.SelectSingleNode("//*[contains(@class, \"prj-noidung\")]/div/h2") != null ? doc.DocumentNode.SelectSingleNode("//*[contains(@class, \"prj-noidung\")]/div/h2").InnerText : null;
-            title = title != null ? title : doc.DocumentNode.SelectSingleNode("//*[contains(@class, \"prj-noidung\")]/h2").InnerText;
+            string title = "", contents = "", rendered = "";
+            title = doc.DocumentNode.SelectSingleNode("//*[contains(@class, \"prj-noidung\")]/div/h2") != null ? doc.DocumentNode.SelectSingleNode("//*[contains(@class, \"prj-noidung\")]/div/h2").OuterHtml : null;
+            title = title != null ? title : doc.DocumentNode.SelectSingleNode("//*[contains(@class, \"prj-noidung\")]/h2").OuterHtml;
             title = Decode(title);
             // description = doc.DocumentNode.SelectSingleNode("//*[contains(@class, 'description')]") != null ? doc.DocumentNode.SelectSingleNode("//*[contains(@class, 'description')]").InnerText : string.Empty;
             var paragraphs = doc.DocumentNode.SelectNodes("//*[contains(@class, \"prj-noidung\")]/p") != null ? doc.DocumentNode.SelectNodes("//*[contains(@class, \"prj-noidung\")]/p") : null;
             paragraphs = paragraphs != null ? paragraphs : doc.DocumentNode.SelectNodes("//*[contains(@class, \"prj-noidung\")]/div/p");
+            rendered = doc.DocumentNode.SelectSingleNode("//*[@id=\"form1\"]/div[4]/div[8]/div[1]") != null ? doc.DocumentNode.SelectSingleNode("//*[@id=\"form1\"]/div[4]/div[8]/div[1]").OuterHtml : string.Empty;
             foreach (var para in paragraphs)
             {
                 contents += para != null ? Decode(para.InnerText) : string.Empty;
@@ -114,7 +115,8 @@ namespace Crawler.Models
             return new New
             {
                 Title = title,
-                Contents = contents
+                Contents = contents,
+                Rendered = rendered
             };
         }
         //NOTE decode special html characters

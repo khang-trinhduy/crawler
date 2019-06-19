@@ -11,6 +11,8 @@ using Crawler.Models;
 using Newtonsoft;
 using Newtonsoft.Json;
 using Crawler.Data;
+using Microsoft.Extensions.Configuration;
+using System.Text;
 
 namespace Crawler.Controllers
 {
@@ -19,9 +21,11 @@ namespace Crawler.Controllers
     public class SpidersController : ControllerBase
     {
         private readonly CrawlerContext _context;
+        private readonly IConfiguration _config;
 
-        public SpidersController(CrawlerContext context)
+        public SpidersController(CrawlerContext context, IConfiguration config)
         {
+            _config = config;
             _context = context;
         }
         [HttpGet]
@@ -77,6 +81,22 @@ namespace Crawler.Controllers
                             {
                                 _context.News.Add(n);
 
+                                try
+                                {
+                                    var post = PostCreateModel.Create(n);
+                                    if (post == null)
+                                    {
+                                        return BadRequest();
+                                    }
+                                    await CreatePost(post);
+
+                                }
+                                catch (System.Exception e)
+                                {
+                                    
+                                    return BadRequest(e.Message);
+                                }
+
                             }
                         }
                         try
@@ -105,7 +125,21 @@ namespace Crawler.Controllers
                             if (exist == null)
                             {
                                 _context.News.Add(n);
+                                try
+                                {
+                                    var post = PostCreateModel.Create(n);
+                                    if (post == null)
+                                    {
+                                        return BadRequest();
+                                    }
+                                    await CreatePost(post);
 
+                                }
+                                catch (System.Exception e)
+                                {
+                                    
+                                    return BadRequest(e.Message);
+                                }
                             }
                         }
                         try
@@ -134,7 +168,21 @@ namespace Crawler.Controllers
                             if (exist == null)
                             {
                                 _context.News.Add(n);
+                                try
+                                {
+                                    var post = PostCreateModel.Create(n);
+                                    if (post == null)
+                                    {
+                                        return BadRequest();
+                                    }
+                                    await CreatePost(post);
 
+                                }
+                                catch (System.Exception e)
+                                {
+                                    
+                                    return BadRequest(e.Message);
+                                }
                             }
                         }
                         try
@@ -153,6 +201,16 @@ namespace Crawler.Controllers
                 }
             }
             return BadRequest();
+        }
+
+        private async Task CreatePost(PostCreateModel post)
+        {
+            HttpClient client = new HttpClient();
+            var json = JsonConvert.SerializeObject(post);
+            HttpContent content = new StringContent(json, Encoding.UTF8, "application/json");
+            var result = await client.PostAsync(_config["wpuri"], content);
+            result.EnsureSuccessStatusCode();
+            var obj = await result.Content.ReadAsStringAsync();
         }
 
         [HttpGet]

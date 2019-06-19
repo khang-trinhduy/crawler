@@ -94,9 +94,9 @@ namespace Crawler.Models
         private async Task<New> GetContents(string url)
         {
             var doc = await GetDocuments(url);
-            string title = "", description = "", contents = "", author = "", source = string.Empty;
-            title = doc.DocumentNode.SelectSingleNode("//div[contains(@class, \"left_cate\")]/*[contains(@class, \"title\")]") != null ? doc.DocumentNode.SelectSingleNode("//div[contains(@class, \"left_cate\")]/*[contains(@class, \"title\")]").InnerText : string.Empty;
-            description = doc.DocumentNode.SelectSingleNode("//*[contains(@class, 'sapo')]") != null ? doc.DocumentNode.SelectSingleNode("//*[contains(@class, 'sapo')]").InnerText : string.Empty;
+            string title = "", description = "", contents = "", author = "", source = string.Empty, rendered = string.Empty;
+            title = doc.DocumentNode.SelectSingleNode("//div[contains(@class, \"left_cate\")]/*[contains(@class, \"title\")]") != null ? doc.DocumentNode.SelectSingleNode("//div[contains(@class, \"left_cate\")]/*[contains(@class, \"title\")]").OuterHtml : string.Empty;
+            description = doc.DocumentNode.SelectSingleNode("//*[contains(@class, 'sapo')]") != null ? doc.DocumentNode.SelectSingleNode("//*[contains(@class, 'sapo')]").OuterHtml : string.Empty;
             var paragraphs = doc.DocumentNode.SelectNodes("//*[@id=\"mainContent\"]/p") != null ? doc.DocumentNode.SelectNodes("//*[@id=\"mainContent\"]/p") : null;
             foreach (var para in paragraphs)
             {
@@ -104,6 +104,7 @@ namespace Crawler.Models
             }
             author = doc.DocumentNode.SelectSingleNode("//*[@id=\"contentdetail\"]/p[1]") != null ? doc.DocumentNode.SelectSingleNode("//*[@id=\"contentdetail\"]/p[1]").InnerText : string.Empty;
             source = doc.DocumentNode.SelectSingleNode("//*[@id=\"contentdetail\"]/p[2]") != null ? doc.DocumentNode.SelectSingleNode("//*[@id=\"contentdetail\"]/p[2]").InnerText : string.Empty;
+            rendered = doc.DocumentNode.SelectSingleNode("//*[@id=\"form1\"]/div[2]/div[4]/div[5]/div/div[1]/div[4]") != null ? doc.DocumentNode.SelectSingleNode("//*[@id=\"form1\"]/div[2]/div[4]/div[5]/div/div[1]/div[4]").OuterHtml : string.Empty; 
             return new New
             {
                 Author = author,
@@ -111,6 +112,7 @@ namespace Crawler.Models
                 Description = description,
                 Contents = contents,
                 Source = source,
+                Rendered = rendered
             };
         }
 
