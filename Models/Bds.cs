@@ -112,12 +112,12 @@ namespace Crawler.Models
             {
                 contents += para != null ? Decode(para.InnerText) : string.Empty;
             }
-            return new New
+            return Normalize(new New
             {
                 Title = title,
                 Contents = contents,
                 Rendered = rendered
-            };
+            });
         }
         //NOTE decode special html characters
         private string Decode(string strToDecode)
@@ -150,7 +150,14 @@ namespace Crawler.Models
 
         public override New Normalize(New n)
         {
-            throw new NotImplementedException();
+            if (n == null)
+            {
+                throw new Exception(nameof(n));
+            }
+            n.Title = "";
+            n.Rendered = n.Rendered.Replace("<strong>", "<p>");
+            n.Rendered = n.Rendered.Replace("</strong>", "</p>");
+            return n;
         }
     }
 }

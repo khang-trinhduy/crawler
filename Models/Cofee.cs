@@ -146,6 +146,10 @@ namespace Crawler.Models
 
         public override New Normalize(New n)
         {
+            if (n == null)
+            {
+                throw new Exception(nameof(n));
+            }
             throw new NotImplementedException();
         }
     }

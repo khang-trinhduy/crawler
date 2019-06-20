@@ -1,0 +1,5 @@
+-- Select rows from a Table or View 'news' in schema 'SchemaName'
+
+SELECT * FROM news
+ 	/* add search conditions here */
+GO

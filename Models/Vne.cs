@@ -128,12 +128,14 @@ namespace Crawler.Models
             {
                 throw new Exception(nameof(New));
             }
+            //NOTE remove author
             var author = new Regex("(style=).+\n.+(/p>)", RegexOptions.Multiline);
             var matched = author.Match(n.Rendered);
             if (matched.Success)
             {
                 n.Rendered = n.Rendered.Replace(matched.Value, "></p>");
             }
+            //NOTE remove strong
             n.Rendered = n.Rendered.Replace("<strong>", "<p>");
             n.Rendered = n.Rendered.Replace("</strong>", "</p>");
             return n;
