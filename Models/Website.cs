@@ -14,5 +14,6 @@ namespace Crawler.Models
         public abstract bool SetUrl(string url);
         public abstract Task<List<New>> GetTopNews(int quantity, string type);
         public abstract Task<string> Template(string url);
+        public abstract New Normalize(New n);
     }
 }

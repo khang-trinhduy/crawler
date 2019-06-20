@@ -128,5 +128,10 @@ namespace Crawler.Models
             var doc = await GetDocuments(url);
             return doc.DocumentNode.InnerHtml;
         }
+
+        public override New Normalize(New n)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

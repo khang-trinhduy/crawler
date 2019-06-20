@@ -3,6 +3,7 @@ using HtmlAgilityPack;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace Crawler.Models
 {
@@ -84,7 +85,7 @@ namespace Crawler.Models
             author = doc.DocumentNode.SelectSingleNode("//*[@id=\"left_calculator\"]/article/p/strong") != null ? doc.DocumentNode.SelectSingleNode("//*[@id=\"left_calculator\"]/article/p/strong").InnerText : string.Empty;
             source = doc.DocumentNode.SelectSingleNode("//*[@id=\"left_calculator\"]/article/p/em") != null ? doc.DocumentNode.SelectSingleNode("//*[@id=\"left_calculator\"]/article/p/em").InnerText : string.Empty;
             rendered = doc.DocumentNode.SelectSingleNode("//*[contains(@class, 'sidebar_1')]/article") != null ? doc.DocumentNode.SelectSingleNode("//*[contains(@class, 'sidebar_1')]/article").OuterHtml : string.Empty;
-            return new New
+            return Normalize( new New
             {
                 Author = author,
                 Title = title,
@@ -92,7 +93,7 @@ namespace Crawler.Models
                 Contents = contents,
                 Source = source,
                 Rendered = rendered
-            };
+            });
         }
 
         public override string GetUrl()
@@ -117,6 +118,25 @@ namespace Crawler.Models
         public override Task<string> Template(string url)
         {
             return GetTemplate(url);
+        }
+        /// <summary>
+        /// change i,b, strong, ect... to p tag
+        /// </summary>
+        public override New Normalize(New n)
+        {
+            if (n == null)
+            {
+                throw new Exception(nameof(New));
+            }
+            var author = new Regex("(style=).+\n.+(/p>)", RegexOptions.Multiline);
+            var matched = author.Match(n.Rendered);
+            if (matched.Success)
+            {
+                n.Rendered = n.Rendered.Replace(matched.Value, "></p>");
+            }
+            n.Rendered = n.Rendered.Replace("<strong>", "<p>");
+            n.Rendered = n.Rendered.Replace("</strong>", "</p>");
+            return n;
         }
     }
 }

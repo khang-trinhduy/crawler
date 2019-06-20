@@ -143,5 +143,10 @@ namespace Crawler.Models
         {
             return GetTemplate(url);
         }
+
+        public override New Normalize(New n)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
