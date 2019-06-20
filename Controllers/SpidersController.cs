@@ -18,10 +18,10 @@ namespace Crawler.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SpidersController : ControllerBase
+    public abstract class SpidersController : ControllerBase
     {
-        private readonly CrawlerContext _context;
-        private readonly IConfiguration _config;
+        protected readonly CrawlerContext _context;
+        protected readonly IConfiguration _config;
 
         public SpidersController(CrawlerContext context, IConfiguration config)
         {
@@ -63,147 +63,8 @@ namespace Crawler.Controllers
 
         [HttpGet]
         [Route("topnews")]
-        public async Task<ActionResult<IEnumerable<New>>> GetTopNews([FromQuery]int quantity, [FromQuery]string subject, [FromQuery]string website = "vne")
-        {
-            if (quantity > 0)
-            {
-                if (website.Equals("vne"))
-                {
-                    Website vnexpress = new Vne();
-                    vnexpress.SetUrl("https://vnexpress.net");
-                    var news = await vnexpress.GetTopNews(quantity, subject);
-                    if (news != null)
-                    {
-                        foreach (var n in news)
-                        {
-                            var exist = _context.News.FirstOrDefault(e => e.Url == n.Url && e.Title == n.Title);
-                            if (exist == null)
-                            {
-                                _context.News.Add(n);
-
-                                try
-                                {
-                                    var post = PostCreateModel.Create(n);
-                                    if (post == null)
-                                    {
-                                        return BadRequest();
-                                    }
-                                    await CreatePost(post);
-
-                                }
-                                catch (System.Exception e)
-                                {
-                                    
-                                    return BadRequest(e.Message);
-                                }
-
-                            }
-                        }
-                        try
-                        {
-                            await _context.SaveChangesAsync();
-                        }
-                        catch (Exception e)
-                        {
-
-                            throw new Exception(e.Message);
-                        }
-                        return Ok(news);
-                    }
-
-                    return NotFound();
-                }
-                else if (website == "cafe" || website == "cafef" || website == "cofee")
-                {
-                    Website cofee = new Cofee();
-                    var news = await cofee.GetTopNews(quantity, subject);
-                    if (news != null)
-                    {
-                        foreach (var n in news)
-                        {
-                            var exist = _context.News.FirstOrDefault(e => e.Url == n.Url && e.Title == n.Title);
-                            if (exist == null)
-                            {
-                                _context.News.Add(n);
-                                try
-                                {
-                                    var post = PostCreateModel.Create(n);
-                                    if (post == null)
-                                    {
-                                        return BadRequest();
-                                    }
-                                    await CreatePost(post);
-
-                                }
-                                catch (System.Exception e)
-                                {
-                                    
-                                    return BadRequest(e.Message);
-                                }
-                            }
-                        }
-                        try
-                        {
-                            await _context.SaveChangesAsync();
-                        }
-                        catch (Exception e)
-                        {
-
-                            throw new Exception(e.Message);
-                        }
-                        return Ok(news);
-                    }
-
-                    return NotFound();
-                }
-                else if (website == "bds" || website == "batdongsan")
-                {
-                    Website bds = new Bds();
-                    var news = await bds.GetTopNews(quantity, subject);
-                    if (news != null)
-                    {
-                        foreach (var n in news)
-                        {
-                            var exist = _context.News.FirstOrDefault(e => e.Url == n.Url && e.Title == n.Title);
-                            if (exist == null)
-                            {
-                                _context.News.Add(n);
-                                try
-                                {
-                                    var post = PostCreateModel.Create(n);
-                                    if (post == null)
-                                    {
-                                        return BadRequest();
-                                    }
-                                    await CreatePost(post);
-
-                                }
-                                catch (System.Exception e)
-                                {
-                                    
-                                    return BadRequest(e.Message);
-                                }
-                            }
-                        }
-                        try
-                        {
-                            await _context.SaveChangesAsync();
-                        }
-                        catch (Exception e)
-                        {
-
-                            throw new Exception(e.Message);
-                        }
-                        return Ok(news);
-                    }
-
-                    return NotFound();
-                }
-            }
-            return BadRequest();
-        }
-
-        private async Task CreatePost(PostCreateModel post)
+        public abstract Task<ActionResult<IEnumerable<New>>> GetTopNews([FromQuery]int quantity, [FromQuery]string subject);
+        protected async Task CreatePost(PostCreateModel post)
         {
             HttpClient client = new HttpClient();
             var json = JsonConvert.SerializeObject(post);
