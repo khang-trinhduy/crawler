@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
 
@@ -104,8 +105,8 @@ namespace Crawler.Models
             }
             author = doc.DocumentNode.SelectSingleNode("//*[@id=\"contentdetail\"]/p[1]") != null ? doc.DocumentNode.SelectSingleNode("//*[@id=\"contentdetail\"]/p[1]").InnerText : string.Empty;
             source = doc.DocumentNode.SelectSingleNode("//*[@id=\"contentdetail\"]/p[2]") != null ? doc.DocumentNode.SelectSingleNode("//*[@id=\"contentdetail\"]/p[2]").InnerText : string.Empty;
-            rendered = doc.DocumentNode.SelectSingleNode("//*[@id=\"form1\"]/div[2]/div[4]/div[5]/div/div[1]/div[4]") != null ? doc.DocumentNode.SelectSingleNode("//*[@id=\"form1\"]/div[2]/div[4]/div[5]/div/div[1]/div[4]").OuterHtml : string.Empty; 
-            return new New
+            rendered = doc.DocumentNode.SelectSingleNode("//*[@id=\"form1\"]/div[2]/div[4]/div[5]/div/div[1]/div[4]") != null ? doc.DocumentNode.SelectSingleNode("//*[@id=\"form1\"]/div[2]/div[4]/div[5]/div/div[1]/div[4]").OuterHtml : string.Empty;
+            return Normalize(new New
             {
                 Author = author,
                 Title = title,
@@ -113,7 +114,7 @@ namespace Crawler.Models
                 Contents = contents,
                 Source = source,
                 Rendered = rendered
-            };
+            });
         }
 
         public override string GetUrl()
@@ -150,7 +151,34 @@ namespace Crawler.Models
             {
                 throw new Exception(nameof(n));
             }
-            throw new NotImplementedException();
+            //NOTE remove a tag
+            var links = new Regex("(<a).+\n*\t*.+(</a>)");
+            var matched = links.Matches(n.Rendered);
+            if (matched != null && matched.Count > 0)
+            {
+                for (int i = 0; i < matched.Count; i++)
+                {
+                    n.Rendered = n.Rendered.Replace(matched[i].Value, "");
+                }
+            }
+            var source = new Regex("(<p class=\"source).+\n*\t*.+(</p>)");
+            var author = new Regex("(<p class=\"author).+\n*\t*.+(</p>)");
+            var tags = new Regex("(<p class=\"author).+\n*\t*.+(</p>)");
+            n.Rendered = Remove(source, n.Rendered);
+            n.Rendered = Remove(author, n.Rendered);
+            n.Rendered = n.Rendered.Replace("<b>", "<p>");
+            n.Rendered = n.Rendered.Replace("</b>", "</p>");
+            n.Rendered = n.Rendered.Replace("<p>Từ Khóa:</p>", "");
+            return n;
+        }
+        private string Remove(Regex re, string str)
+        {
+            var matched = re.Match(str);
+            if (matched.Success)
+            {
+                str = str.Replace(matched.Value, "");
+            }
+            return str;
         }
     }
 }
