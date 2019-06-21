@@ -157,6 +157,8 @@ namespace Crawler.Models
             n.Title = "";
             n.Rendered = n.Rendered.Replace("<strong>", "<p>");
             n.Rendered = n.Rendered.Replace("</strong>", "</p>");
+            n.Rendered = n.Rendered.Replace("</em>", "</p>");
+            n.Rendered = n.Rendered.Replace("<em>", "<p>");
             return n;
         }
     }

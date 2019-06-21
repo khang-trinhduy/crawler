@@ -66,12 +66,29 @@ namespace Crawler.Controllers
         public abstract Task<ActionResult<IEnumerable<New>>> GetTopNews([FromQuery]int quantity, [FromQuery]string subject);
         protected async Task CreatePost(PostCreateModel post)
         {
-            HttpClient client = new HttpClient();
-            var json = JsonConvert.SerializeObject(post);
-            HttpContent content = new StringContent(json, Encoding.UTF8, "application/json");
-            var result = await client.PostAsync(_config["wpuri"], content);
-            result.EnsureSuccessStatusCode();
-            var obj = await result.Content.ReadAsStringAsync();
+            JWTAuth auth = new JWTAuth(_config["wpuri"]);
+            auth.User = new JWTUser {
+                UserName = _config["wpuser"],
+                Password = _config["wppw"],
+            };
+            var httpResponseMsg = await auth.RequestJWToken();
+            var content = httpResponseMsg.Content.ReadAsStringAsync().Result;
+            var response = JsonConvert.DeserializeObject<JWTResponse>(content);
+            auth.Token = response.Token;
+            if (await auth.IsValidJWToken())
+            {
+                var result = await auth.PostAsync(post);
+                if (!result.IsSuccessStatusCode)
+                {
+                    throw new Exception(nameof(post));
+                }
+            }
+            else
+            {
+                throw new Exception("invalid/expired token");
+                
+            }
+            
         }
 
         [HttpGet]

@@ -151,7 +151,7 @@ namespace Crawler.Models
             {
                 throw new Exception(nameof(n));
             }
-            //NOTE remove a tag
+            //NOTE remove tag
             var links = new Regex("(<a).+\n*\t*.+(</a>)");
             var matched = links.Matches(n.Rendered);
             if (matched != null && matched.Count > 0)
