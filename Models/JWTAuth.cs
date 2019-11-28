@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using Crawler.Controllers;
 using Newtonsoft.Json;
 namespace Crawler.Models
 {
@@ -13,7 +14,12 @@ namespace Crawler.Models
         public string Token { get; set; }
         public HttpClient Client { get; set; }
         public JWTUser User { get; set; }
-        public JWTAuth(string baseUri) { WpUri = baseUri; Client = new HttpClient(); User = new JWTUser(); }
+        public JWTAuth(string baseUri) 
+        { 
+            WpUri = baseUri; 
+            Client = new HttpClient(); 
+            User = new JWTUser(); 
+        }
         public async Task<HttpResponseMessage> RequestJWToken()
         {
             if (WpUri == "" || WpUri == string.Empty)
@@ -79,6 +85,48 @@ namespace Crawler.Models
             {
 
                 throw new Exception(nameof(response));
+            }
+        }
+
+        public async Task<HttpResponseMessage> GetCategories()
+        {
+            Route = new string("/wp/v2/categories");
+            Client = new HttpClient();
+            Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+            var response = await Client.GetAsync(WpUri + Route);
+            try
+            {
+                response.EnsureSuccessStatusCode();
+                return response;
+            }
+            catch (System.Exception)
+            {
+
+                throw new Exception(nameof(response));
+            }
+        }
+
+        public async Task<HttpResponseMessage> CreateCat(string name)
+        {
+            Route = new string("/wp/v2/categories");
+            Client = new HttpClient();
+             var json = JsonConvert.SerializeObject(new Category {
+                 Name = name,
+                 Description = "",
+                 Parent = 0,
+                 Slug = name.ToLower()
+             });
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+            var response = await Client.PostAsync(WpUri + Route, content);
+            try
+            {
+                response.EnsureSuccessStatusCode();
+                return response;
+            }
+            catch (System.Exception e)
+            {
+                throw new Exception(e.Message);
             }
         }
     }

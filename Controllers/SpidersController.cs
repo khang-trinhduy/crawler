@@ -77,6 +77,24 @@ namespace Crawler.Controllers
             auth.Token = response.Token;
             if (await auth.IsValidJWToken())
             {
+                // var cats = await auth.GetCategories();
+                // var catItems = JsonConvert.DeserializeObject<List<Category>>(await cats.Content.ReadAsStringAsync());
+                // if (catItems.FirstOrDefault(e => string.Equals(e.Name, post.category, StringComparison.InvariantCultureIgnoreCase)) != null)
+                // {
+                //     post.categories.Add(catItems.FirstOrDefault(e => string.Equals(e.Name, post.category, StringComparison.InvariantCultureIgnoreCase)).Id);
+                // }
+                // else
+                // {
+                //     var newCat = await auth.CreateCat(post.category);
+                //     if (!newCat.IsSuccessStatusCode)
+                //     {
+                //         throw new Exception(nameof(post));
+                //     }
+                //     var res = JsonConvert.DeserializeObject<Category>(newCat.Content.ToString());
+                //     post.categories.Add(res.Id);
+                // }
+                post.categories.Add(25);
+                // post.tags = new List<string>(){};
                 var result = await auth.PostAsync(post);
                 if (!result.IsSuccessStatusCode)
                 {
@@ -136,5 +154,18 @@ namespace Crawler.Controllers
         public void Delete(int id)
         {
         }
+    }
+
+    public class Category
+    {
+        public int Id { get; set; }
+        public int Count { get; set; }
+        public string Description { get; set; }
+        public string Link { get; set; }
+        public string Name { get; set; }
+        public string Slug { get; set; }
+        public int Parent { get; set; }
+        public List<int> Meta { get; set; } = new List<int>();
+
     }
 }

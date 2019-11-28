@@ -167,7 +167,9 @@ namespace Crawler.Models
             n.Rendered = Remove(source, n.Rendered);
             n.Rendered = Remove(author, n.Rendered);
             n.Rendered = n.Rendered.Replace("<b>", "<p>");
+            n.Rendered = n.Rendered.Replace("<strong>", "<p>");
             n.Rendered = n.Rendered.Replace("</b>", "</p>");
+            n.Rendered = n.Rendered.Replace("</strong>", "</p>");
             n.Rendered = n.Rendered.Replace("<p>Từ Khóa:</p>", "");
             return n;
         }
