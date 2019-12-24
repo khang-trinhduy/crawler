@@ -44,7 +44,7 @@ namespace Crawler.Models
             catch (System.Exception)
             {
 
-                throw new Exception(nameof(response));
+                throw new Exception("request token: " + nameof(response));
             }
         }
         public async Task<bool> IsValidJWToken()
@@ -84,7 +84,7 @@ namespace Crawler.Models
             catch (System.Exception)
             {
 
-                throw new Exception(nameof(response));
+                throw new Exception("post post: " + response.StatusCode.ToString());
             }
         }
 
@@ -102,7 +102,7 @@ namespace Crawler.Models
             catch (System.Exception)
             {
 
-                throw new Exception(nameof(response));
+                throw new Exception("get cates: " + nameof(response));
             }
         }
 

@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.2",
-    "signature": "69a34341270fc5f3890342998f0f67b792030a27"
+    "signature": "6f707202e828dd8542db7203a243eba6fe81edc5"
   },
   "compilationOptions": {
     "defines": [
@@ -24,9 +24,11 @@
     ".NETCoreApp,Version=v2.2": {
       "Crawler/1.0.0": {
         "dependencies": {
+          "HtmlAgilityPack.CssSelectors.NetCore": "1.2.1",
           "Microsoft.AspNetCore.App": "2.2.0",
           "Microsoft.AspNetCore.Razor.Design": "2.2.0",
           "Microsoft.NETCore.App": "2.2.0",
+          "WordpressSharp.Core": "1.0.3",
           "HtmlAgilityPack": "1.11.7",
           "Newtonsoft.Json": "12.0.2"
         },
@@ -52,6 +54,34 @@
         },
         "compile": {
           "lib/netstandard2.0/HtmlAgilityPack.dll": {}
+        }
+      },
+      "HtmlAgilityPack.CssSelectors.NetCore/1.2.1": {
+        "dependencies": {
+          "HtmlAgilityPack": "1.11.7"
+        },
+        "runtime": {
+          "lib/netstandard2.0/HtmlAgilityPack.CssSelectors.NetCore.dll": {
+            "assemblyVersion": "1.2.1.0",
+            "fileVersion": "1.2.1.0"
+          }
+        },
+        "compile": {
+          "lib/netstandard2.0/HtmlAgilityPack.CssSelectors.NetCore.dll": {}
+        }
+      },
+      "Kveer.XmlRPC/1.1.1": {
+        "dependencies": {
+          "System.Reflection.Emit": "4.3.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Kveer.XmlRPC.dll": {
+            "assemblyVersion": "1.1.1.0",
+            "fileVersion": "1.1.1.0"
+          }
+        },
+        "compile": {
+          "lib/netstandard2.0/Kveer.XmlRPC.dll": {}
         }
       },
       "Newtonsoft.Json/12.0.2": {
@@ -134,6 +164,20 @@
         },
         "compile": {
           "ref/netstandard1.3/System.Xml.XPath.XmlDocument.dll": {}
+        }
+      },
+      "WordpressSharp.Core/1.0.3": {
+        "dependencies": {
+          "Kveer.XmlRPC": "1.1.1"
+        },
+        "runtime": {
+          "lib/netcoreapp2.2/WordpressSharp.Core.dll": {
+            "assemblyVersion": "1.0.3.0",
+            "fileVersion": "1.0.3.0"
+          }
+        },
+        "compile": {
+          "lib/netcoreapp2.2/WordpressSharp.Core.dll": {}
         }
       },
       "Microsoft.AspNet.WebApi.Client/5.2.6": {
@@ -3299,6 +3343,20 @@
       "path": "htmlagilitypack/1.11.7",
       "hashPath": "htmlagilitypack.1.11.7.nupkg.sha512"
     },
+    "HtmlAgilityPack.CssSelectors.NetCore/1.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ES2Ht+wpgaLmyyyCP9cl3AT5U2BtTOCZ2pdFL8GYa27V8IAD9U77KOcuvi61k+nDE4kpU+EjwaBJepVFqLpmGA==",
+      "path": "htmlagilitypack.cssselectors.netcore/1.2.1",
+      "hashPath": "htmlagilitypack.cssselectors.netcore.1.2.1.nupkg.sha512"
+    },
+    "Kveer.XmlRPC/1.1.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-0/KwvIiXdMVDkU/DPc71JHkNOjhEa+aHtz94X1KrOXz8HMaO+5Rrq58Gbh68rR/KOWIaiUzPDRapR33IUJeL7Q==",
+      "path": "kveer.xmlrpc/1.1.1",
+      "hashPath": "kveer.xmlrpc.1.1.1.nupkg.sha512"
+    },
     "Newtonsoft.Json/12.0.2": {
       "type": "package",
       "serviceable": true,
@@ -3326,6 +3384,13 @@
       "sha512": "sha512-A/uxsWi/Ifzkmd4ArTLISMbfFs6XpRPsXZonrIqyTY70xi8t+mDtvSM5Os0RqyRDobjMBwIDHDL4NOIbkDwf7A==",
       "path": "system.xml.xpath.xmldocument/4.3.0",
       "hashPath": "system.xml.xpath.xmldocument.4.3.0.nupkg.sha512"
+    },
+    "WordpressSharp.Core/1.0.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-+alQcSnVjiS/L7IA+2Y71/WOgdNtrbMbX51gSRYQXrcweo2+0O0Z+ydrkdeuHX1XLnEqnydnpMDeHRlgdHn9Vw==",
+      "path": "wordpresssharp.core/1.0.3",
+      "hashPath": "wordpresssharp.core.1.0.3.nupkg.sha512"
     },
     "Microsoft.AspNet.WebApi.Client/5.2.6": {
       "type": "package",
@@ -5269,7 +5334,7 @@
     "System.Xml.XmlSerializer/4.3.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-MYoTCP7EZ98RrANESW05J5ZwskKDoN0AuZ06ZflnowE50LTpbR5yRg3tHckTVm5j/m47stuGgCrCHWePyHS70Q==",
+      "sha512": "sha512-VShQJhOxgD/5M2Z1IWm1vMaSqlbjo1zdFf8H7Ahte6bTvSUhUko/gDpAVVhGgGgTDeue4QyNg1fu1Zz2GKSEuQ==",
       "path": "system.xml.xmlserializer/4.3.0",
       "hashPath": "system.xml.xmlserializer.4.3.0.nupkg.sha512"
     },

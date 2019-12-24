@@ -17,7 +17,7 @@ namespace Crawler.Models
             {
                 SetUrl("http://vneconomy.vn/timeline/6/trang-1.htm");
             }
-            else if (type == "ck")
+            else if (type == "ck" || type == "")
             {
                 SetUrl("http://vneconomy.vn/timeline/7/trang-1.htm");
             }
@@ -63,6 +63,7 @@ namespace Crawler.Models
         private async Task<HtmlDocument> GetDocuments(string url)
         {
             HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36");
             var mainPage = await client.GetStringAsync(url);
             HtmlDocument docs = new HtmlDocument();
             docs.LoadHtml(mainPage);
@@ -81,19 +82,18 @@ namespace Crawler.Models
             }
             author = doc.DocumentNode.SelectSingleNode("//*[@id=\"contentdetail\"]/p[1]") != null ? doc.DocumentNode.SelectSingleNode("//*[@id=\"contentdetail\"]/p[1]").InnerText : string.Empty;
             source = doc.DocumentNode.SelectSingleNode("//*[@id=\"contentdetail\"]/p[2]") != null ? doc.DocumentNode.SelectSingleNode("//*[@id=\"contentdetail\"]/p[2]").InnerText : string.Empty;
+            var rendered = doc.DocumentNode.SelectSingleNode("/html/body/form/div[2]/div[3]/div[4]/div[1]/div[1]/div[4]") != null ? doc.DocumentNode.SelectSingleNode("/html/body/form/div[2]/div[3]/div[4]/div[1]/div[1]/div[4]").OuterHtml : "";
             return new New
-            {
-                Author = author,
-                Title = title,
-                Description = description,
-                Contents = contents,
-                Source = source,
-            };
+            (
+                title,
+                rendered,"", 
+                source,"",""
+            );
         }
         private async Task<List<string>> GetLinks()
         {
             HtmlDocument docs = await GetDocuments(this.Url);
-            var articles = docs.DocumentNode.SelectNodes("/li/h3/a");
+            var articles = docs.DocumentNode.SelectNodes("/html/body/li/div/h3/a");
             List<string> links = new List<string>();
             foreach (var a in articles)
             {

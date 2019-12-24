@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Crawler.Data;
+using Crawler.DataContext;
 using Crawler.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -19,6 +19,7 @@ namespace Crawler.Controllers
         {
             if (quantity > 0)
             {
+                var result = new Result();
                 Website vnexpress = new Vne();
                 vnexpress.SetUrl("https://vnexpress.net");
                 var news = await vnexpress.GetTopNews(quantity, subject);
@@ -26,39 +27,34 @@ namespace Crawler.Controllers
                 {
                     foreach (var n in news)
                     {
-                        var exist = _context.News.FirstOrDefault(e => e.Url == n.Url && e.Title == n.Title);
-                        if (exist == null)
+                        result.Total++;
+                        var existed = _context.News.FirstOrDefault(e => e.Title.ToLower() == n.Title);
+                        if (existed != null)
                         {
+                            continue;
+                        }
+
+                        try
+                        {
+                            var post = PostCreateModel.Create(n);
+                            if (post == null)
+                            {
+                                continue;
+                            }
+                            Wordpress.CreateAsync(post);
                             _context.News.Add(n);
-
-                            try
-                            {
-                                var post = PostCreateModel.Create(n);
-                                if (post == null)
-                                {
-                                    return BadRequest();
-                                }
-                                await CreatePost(post);
-
-                            }
-                            catch (System.Exception e)
-                            {
-
-                                return BadRequest(e.Message);
-                            }
+                            result.Published++;
 
                         }
-                    }
-                    try
-                    {
-                        await _context.SaveChangesAsync();
-                    }
-                    catch (Exception e)
-                    {
+                        catch (System.Exception e)
+                        {
+                            continue;
+                        }
 
-                        throw new Exception(e.Message);
                     }
-                    return Ok(news);
+                    await _context.SaveChangesAsync();
+
+                    return Ok(result);
                 }
             }
             return BadRequest(nameof(quantity));

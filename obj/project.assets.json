@@ -17,6 +17,30 @@
           "lib/netstandard2.0/HtmlAgilityPack.dll": {}
         }
       },
+      "HtmlAgilityPack.CssSelectors.NetCore/1.2.1": {
+        "type": "package",
+        "dependencies": {
+          "HtmlAgilityPack": "1.6.16"
+        },
+        "compile": {
+          "lib/netstandard2.0/HtmlAgilityPack.CssSelectors.NetCore.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/HtmlAgilityPack.CssSelectors.NetCore.dll": {}
+        }
+      },
+      "Kveer.XmlRPC/1.1.1": {
+        "type": "package",
+        "dependencies": {
+          "System.Reflection.Emit": "4.3.0"
+        },
+        "compile": {
+          "lib/netstandard2.0/Kveer.XmlRPC.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Kveer.XmlRPC.dll": {}
+        }
+      },
       "Microsoft.AspNet.WebApi.Client/5.2.6": {
         "type": "package",
         "dependencies": {
@@ -4474,6 +4498,18 @@
         "runtime": {
           "lib/netstandard1.3/System.Xml.XPath.XmlDocument.dll": {}
         }
+      },
+      "WordpressSharp.Core/1.0.3": {
+        "type": "package",
+        "dependencies": {
+          "Kveer.XmlRPC": "1.1.1"
+        },
+        "compile": {
+          "lib/netcoreapp2.2/WordpressSharp.Core.dll": {}
+        },
+        "runtime": {
+          "lib/netcoreapp2.2/WordpressSharp.Core.dll": {}
+        }
       }
     }
   },
@@ -4527,6 +4563,31 @@
         "lib/uap10.0/HtmlAgilityPack.dll",
         "lib/uap10.0/HtmlAgilityPack.pdb",
         "lib/uap10.0/HtmlAgilityPack.pri"
+      ]
+    },
+    "HtmlAgilityPack.CssSelectors.NetCore/1.2.1": {
+      "sha512": "ES2Ht+wpgaLmyyyCP9cl3AT5U2BtTOCZ2pdFL8GYa27V8IAD9U77KOcuvi61k+nDE4kpU+EjwaBJepVFqLpmGA==",
+      "type": "package",
+      "path": "htmlagilitypack.cssselectors.netcore/1.2.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "htmlagilitypack.cssselectors.netcore.1.2.1.nupkg.sha512",
+        "htmlagilitypack.cssselectors.netcore.nuspec",
+        "lib/netstandard1.5/HtmlAgilityPack.CssSelectors.NetCore.dll",
+        "lib/netstandard2.0/HtmlAgilityPack.CssSelectors.NetCore.dll"
+      ]
+    },
+    "Kveer.XmlRPC/1.1.1": {
+      "sha512": "0/KwvIiXdMVDkU/DPc71JHkNOjhEa+aHtz94X1KrOXz8HMaO+5Rrq58Gbh68rR/KOWIaiUzPDRapR33IUJeL7Q==",
+      "type": "package",
+      "path": "kveer.xmlrpc/1.1.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "kveer.xmlrpc.1.1.1.nupkg.sha512",
+        "kveer.xmlrpc.nuspec",
+        "lib/netstandard2.0/Kveer.XmlRPC.dll"
       ]
     },
     "Microsoft.AspNet.WebApi.Client/5.2.6": {
@@ -11964,7 +12025,7 @@
       ]
     },
     "System.Xml.XmlSerializer/4.3.0": {
-      "sha512": "MYoTCP7EZ98RrANESW05J5ZwskKDoN0AuZ06ZflnowE50LTpbR5yRg3tHckTVm5j/m47stuGgCrCHWePyHS70Q==",
+      "sha512": "VShQJhOxgD/5M2Z1IWm1vMaSqlbjo1zdFf8H7Ahte6bTvSUhUko/gDpAVVhGgGgTDeue4QyNg1fu1Zz2GKSEuQ==",
       "type": "package",
       "path": "system.xml.xmlserializer/4.3.0",
       "files": [
@@ -12146,13 +12207,30 @@
         "system.xml.xpath.xmldocument.4.3.0.nupkg.sha512",
         "system.xml.xpath.xmldocument.nuspec"
       ]
+    },
+    "WordpressSharp.Core/1.0.3": {
+      "sha512": "+alQcSnVjiS/L7IA+2Y71/WOgdNtrbMbX51gSRYQXrcweo2+0O0Z+ydrkdeuHX1XLnEqnydnpMDeHRlgdHn9Vw==",
+      "type": "package",
+      "path": "wordpresssharp.core/1.0.3",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/netcoreapp2.0/WordpressSharp.Core.dll",
+        "lib/netcoreapp2.1/WordpressSharp.Core.dll",
+        "lib/netcoreapp2.2/WordpressSharp.Core.dll",
+        "lib/netstandard2.0/WordpressSharp.Core.dll",
+        "wordpresssharp.core.1.0.3.nupkg.sha512",
+        "wordpresssharp.core.nuspec"
+      ]
     }
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v2.2": [
+      "HtmlAgilityPack.CssSelectors.NetCore >= 1.2.1",
       "Microsoft.AspNetCore.App >= 2.2.0",
       "Microsoft.AspNetCore.Razor.Design >= 2.2.0",
       "Microsoft.NETCore.App >= 2.2.0",
+      "WordpressSharp.Core >= 1.0.3",
       "htmlagilitypack >= 1.11.7",
       "newtonsoft.json >= 12.0.2"
     ]
@@ -12198,6 +12276,10 @@
     "frameworks": {
       "netcoreapp2.2": {
         "dependencies": {
+          "HtmlAgilityPack.CssSelectors.NetCore": {
+            "target": "Package",
+            "version": "[1.2.1, )"
+          },
           "Microsoft.AspNetCore.App": {
             "suppressParent": "All",
             "target": "Package",
@@ -12214,6 +12296,10 @@
             "target": "Package",
             "version": "[2.2.0, )",
             "autoReferenced": true
+          },
+          "WordpressSharp.Core": {
+            "target": "Package",
+            "version": "[1.0.3, )"
           },
           "htmlagilitypack": {
             "target": "Package",

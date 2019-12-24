@@ -10,14 +10,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Crawler.Migrations
 {
     [DbContext(typeof(CrawlerContext))]
-    [Migration("20190619092154_add render")]
-    partial class addrender
+    [Migration("20191213112840_update website")]
+    partial class updatewebsite
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.4-servicing-10062")
+                .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -29,15 +29,21 @@ namespace Crawler.Migrations
 
                     b.Property<string>("Author");
 
+                    b.Property<string>("Categories");
+
                     b.Property<string>("Contents");
 
                     b.Property<string>("Description");
+
+                    b.Property<string>("Image");
 
                     b.Property<DateTime>("Publish");
 
                     b.Property<string>("Rendered");
 
                     b.Property<string>("Source");
+
+                    b.Property<string>("Tags");
 
                     b.Property<string>("Title");
 
@@ -58,10 +64,14 @@ namespace Crawler.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Categories");
+
                     b.Property<string>("Discriminator")
                         .IsRequired();
 
                     b.Property<string>("Name");
+
+                    b.Property<string>("Type");
 
                     b.Property<string>("Url");
 

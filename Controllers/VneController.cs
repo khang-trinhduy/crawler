@@ -9,9 +9,9 @@ using Microsoft.Extensions.Configuration;
 
 namespace Crawler.Controllers
 {
-    public class CofeesController : SpidersController
+    public class VneController : SpidersController
     {
-        public CofeesController(CrawlerContext context, IConfiguration config) : base(context, config)
+        public VneController(CrawlerContext context, IConfiguration config) : base(context, config)
         {
         }
 
@@ -19,19 +19,13 @@ namespace Crawler.Controllers
         {
             if (quantity > 0)
             {
-                var result = new Result();
-                Website cofee = new Cofee();
+                Website cofee = new Vneco();
                 var news = await cofee.GetTopNews(quantity, subject);
                 if (news != null)
                 {
                     foreach (var n in news)
                     {
-                        result.Total++;
-                        var existed = _context.News.FirstOrDefault(e => e.Title.ToLower() == n.Title);
-                        if (existed != null)
-                        {
-                            continue;
-                        }
+
                         try
                         {
                             var post = PostCreateModel.Create(n);
@@ -40,17 +34,16 @@ namespace Crawler.Controllers
                                 continue;
                             }
                             Wordpress.CreateAsync(post);
-                            _context.News.Add(n);
-                            result.Published++;
+
                         }
                         catch (System.Exception e)
                         {
                             continue;
                         }
-                    }
-                    await _context.SaveChangesAsync();
 
-                    return Ok(result);
+                    }
+
+                    return Ok(news);
                 }
             }
             return BadRequest(nameof(quantity));

@@ -10,7 +10,7 @@ using System.Diagnostics;
 using Crawler.Models;
 using Newtonsoft;
 using Newtonsoft.Json;
-using Crawler.Data;
+using Crawler.DataContext;
 using Microsoft.Extensions.Configuration;
 using System.Text;
 
@@ -77,24 +77,6 @@ namespace Crawler.Controllers
             auth.Token = response.Token;
             if (await auth.IsValidJWToken())
             {
-                // var cats = await auth.GetCategories();
-                // var catItems = JsonConvert.DeserializeObject<List<Category>>(await cats.Content.ReadAsStringAsync());
-                // if (catItems.FirstOrDefault(e => string.Equals(e.Name, post.category, StringComparison.InvariantCultureIgnoreCase)) != null)
-                // {
-                //     post.categories.Add(catItems.FirstOrDefault(e => string.Equals(e.Name, post.category, StringComparison.InvariantCultureIgnoreCase)).Id);
-                // }
-                // else
-                // {
-                //     var newCat = await auth.CreateCat(post.category);
-                //     if (!newCat.IsSuccessStatusCode)
-                //     {
-                //         throw new Exception(nameof(post));
-                //     }
-                //     var res = JsonConvert.DeserializeObject<Category>(newCat.Content.ToString());
-                //     post.categories.Add(res.Id);
-                // }
-                post.categories.Add(25);
-                // post.tags = new List<string>(){};
                 var result = await auth.PostAsync(post);
                 if (!result.IsSuccessStatusCode)
                 {
@@ -154,6 +136,12 @@ namespace Crawler.Controllers
         public void Delete(int id)
         {
         }
+    }
+
+    public class Result
+    {
+        public int Total { get; set; } = 0;
+        public int Published { get; set; } = 0;
     }
 
     public class Category

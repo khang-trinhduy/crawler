@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
@@ -15,42 +16,57 @@ namespace Crawler.Models
             if (type == "chcc")
             {
                 SetUrl("https://batdongsan.com.vn/can-ho-chung-cu");
+                Type = "Căn hộ chung cư";
             }
             else if (type == "covp")
             {
                 SetUrl("https://batdongsan.com.vn/cao-oc-van-phong");
+                Type = "Cao ốc văn phòng";
             }
             else if (type == "tttm")
             {
                 SetUrl("https://batdongsan.com.vn/trung-tam-thuong-mai");
+                Type = "Trung tâm thương mại";
             }
             else if (type == "kdtm")
             {
                 SetUrl("https://batdongsan.com.vn/khu-do-thi-moi");
+                Type = "Khu đô thị mới";
             }
             else if (type == "kph")
             {
                 SetUrl("https://batdongsan.com.vn/khu-phuc-hop");
+                Type = "Khu phức hợp";
             }
             else if (type == "noxh")
             {
                 SetUrl("https://batdongsan.com.vn/nha-o-xa-hoi");
+                Type = "Nhà ở xã hội";
             }
             else if (type == "kndst")
             {
                 SetUrl("https://batdongsan.com.vn/khu-nghi-duong-sinh-thai");
+                Type = "Khu nghỉ dưỡng sinh thái";
             }
             else if (type == "kcn")
             {
                 SetUrl("https://batdongsan.com.vn/khu-cong-nghiep");
+                Type = "Khu công nghiệp";
             }
             else if (type == "dak")
             {
                 SetUrl("https://batdongsan.com.vn/du-an-khac");
+                Type = "Dự án khác";
             }
             else if (type == "btlk")
             {
                 SetUrl("https://batdongsan.com.vn/biet-thu-lien-ke");
+                Type = "Biệt thự liền kề";
+            }
+            else if (type == "ttt")
+            {
+                SetUrl("https://batdongsan.com.vn/tin-thi-truong");
+                Type = "Tin thị trường";
             }
             return await GetNews(quantity);
         }
@@ -70,7 +86,7 @@ namespace Crawler.Models
         private async Task<List<string>> GetLinks()
         {
             HtmlDocument docs = await GetDocuments(this.Url);
-            var articles = docs.DocumentNode.SelectNodes("//*[@id=\"form1\"]/div[4]/div[8]/div/div[1]/div/ul/li/div[2]/div[1]/h3/a");
+            var articles = docs.DocumentNode.SelectNodes("/html/body/form/div[4]/div[8]/div/div[1]/div/ul/li/div[2]/div[1]/h3/a");
             List<string> links = new List<string>();
             foreach (var a in articles)
             {
@@ -100,24 +116,54 @@ namespace Crawler.Models
         {
             ////*[contains(@class, "prj-noidung")]/div/p
             var doc = await GetDocuments(url);
-            string title = "", contents = "", rendered = "";
-            title = doc.DocumentNode.SelectSingleNode("//*[contains(@class, \"prj-noidung\")]/div/h2") != null ? doc.DocumentNode.SelectSingleNode("//*[contains(@class, \"prj-noidung\")]/div/h2").OuterHtml : null;
-            title = title != null ? title : doc.DocumentNode.SelectSingleNode("//*[contains(@class, \"prj-noidung\")]/h2").OuterHtml;
-            title = Decode(title);
-            // description = doc.DocumentNode.SelectSingleNode("//*[contains(@class, 'description')]") != null ? doc.DocumentNode.SelectSingleNode("//*[contains(@class, 'description')]").InnerText : string.Empty;
-            var paragraphs = doc.DocumentNode.SelectNodes("//*[contains(@class, \"prj-noidung\")]/p") != null ? doc.DocumentNode.SelectNodes("//*[contains(@class, \"prj-noidung\")]/p") : null;
+            string contents = "", rendered = "", description = "";
+            var title = doc.DocumentNode.SelectSingleNode("/html/body/form/div[4]/div[6]/h1");
+            // title = Decode(title);
+            description = doc.DocumentNode.SelectSingleNode("/html/body/form/div[4]/div[6]/span[1]") != null ? doc.DocumentNode.SelectSingleNode("/html/body/form/div[4]/div[6]/span[1]").InnerText : string.Empty;
+            var paragraphs = doc.DocumentNode.SelectNodes("/html/body/form/div[4]/div[8]/div[1]/p") != null ? doc.DocumentNode.SelectNodes("/html/body/form/div[4]/div[8]/div[1]/p") : null;
             paragraphs = paragraphs != null ? paragraphs : doc.DocumentNode.SelectNodes("//*[contains(@class, \"prj-noidung\")]/div/p");
-            rendered = doc.DocumentNode.SelectSingleNode("//*[@id=\"form1\"]/div[4]/div[8]/div[1]") != null ? doc.DocumentNode.SelectSingleNode("//*[@id=\"form1\"]/div[4]/div[8]/div[1]").OuterHtml : string.Empty;
-            foreach (var para in paragraphs)
+            rendered = doc.DocumentNode.SelectSingleNode("/html/body/form/div[4]/div[8]/div[1]") != null ? doc.DocumentNode.SelectSingleNode("/html/body/form/div[4]/div[8]/div[1]").OuterHtml : string.Empty;
+            var img = doc.DocumentNode.SelectSingleNode("/html/body/form/div[4]/div[6]/div[2]/div/div/div[1]/div/div[1]/div/img").Attributes["src"].Value;
+            var general = doc.DocumentNode.SelectSingleNode("/html/body/form/div[4]/div[6]/div[2]/div/div/div[2]");
+            var table = GetTable(general);
+            if (paragraphs != null)
             {
-                contents += para != null ? Decode(para.InnerText) : string.Empty;
+                foreach (var para in paragraphs)
+                {
+                    contents += para != null ? Decode(para.InnerText) : string.Empty;
+                }
+                
             }
-            return Normalize(new New
+            return new New
+            (
+                title.InnerText,
+                rendered,
+                description,
+                "batdongsan.com" + "-" + Type,
+                img,
+                this.Categories
+            );
+        }
+
+        private string GetTable(HtmlNode general)
+        {
+            var table = "";
+            // remove trash
+            var rows = general.ChildNodes.Where(e => e.Name != "#text").ToList();
+            var header = rows[0];
+            table += "<h2>" + header.InnerText + "</h2>";
+            table += "<table><thead></thead><tbody>";
+            for (int i = 1; i < rows.Count; i++)
             {
-                Title = title,
-                Contents = contents,
-                Rendered = rendered
-            });
+                HtmlNode row = rows[i];
+                var cells = row.ChildNodes.Where(e => e.Name != "#text").ToList();
+                if (cells.Count >= 2)
+                {
+                    table += "<tr><td>" + cells[0].InnerText + "</td><td>" + cells[1].InnerText + "</td></tr>";        
+                }
+            }
+            table += "</tbody></table>";
+            return table;
         }
         //NOTE decode special html characters
         private string Decode(string strToDecode)
@@ -154,7 +200,6 @@ namespace Crawler.Models
             {
                 throw new Exception(nameof(n));
             }
-            n.Title = "";
             n.Rendered = n.Rendered.Replace("<strong>", "<p>");
             n.Rendered = n.Rendered.Replace("</strong>", "</p>");
             n.Rendered = n.Rendered.Replace("</em>", "</p>");

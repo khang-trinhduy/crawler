@@ -16,5 +16,20 @@ namespace Crawler.Models
         public abstract Task<List<New>> GetTopNews(int quantity, string type);
         public abstract Task<string> Template(string url);
         public abstract New Normalize(New n);
+        public string Categories { get; set; }
+        
+        public string RemoveLink(string content)
+        {
+            content = content.Trim();
+            if (content == "")
+            {
+                return content;
+            }
+            else {
+                content = content.Replace("<a", "<i");
+                content = content.Replace("</a", "</i");
+            }
+            return content;
+        }
     }
 }

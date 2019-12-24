@@ -9,9 +9,9 @@ using Microsoft.Extensions.Configuration;
 
 namespace Crawler.Controllers
 {
-    public class BdsController : SpidersController
+    public class TuoitreController : SpidersController
     {
-        public BdsController(CrawlerContext context, IConfiguration config) : base(context, config)
+        public TuoitreController(CrawlerContext context, IConfiguration config) : base(context, config)
         {
         }
 
@@ -19,44 +19,43 @@ namespace Crawler.Controllers
         {
             if (quantity > 0)
             {
-                var result = new Result();
-                Website bds = new Bds();
-                if (subject == "ttt")
-                {
-                    bds = new BdsThiTruong();
-                }
+                Website bds = new Tuoitre();
                 var news = await bds.GetTopNews(quantity, subject);
                 if (news != null)
                 {
                     foreach (var n in news)
                     {
-                        result.Total++;
-                        var existed = _context.News.FirstOrDefault(e => e.Title.ToLower() == n.Title);
-                        if (existed != null)
-                        {
-                            continue;
-                        }
+                        var exist = _context.News.FirstOrDefault(e => e.Url == n.Url && e.Title == n.Title);
+                        // if (exist == null)
+                        // {
+                        // _context.News.Add(n);
                         try
                         {
                             var post = PostCreateModel.Create(n);
                             if (post == null)
                             {
-                                continue;
+                                // continue;
                             }
-                            Wordpress.CreateAsync(post);
-                            _context.News.Add(n);
-                            result.Published++;
+                            await CreatePost(post);
 
                         }
                         catch (System.Exception e)
                         {
-                            continue;
+                            // continue;
+                            return BadRequest(e.Message);
                         }
-
+                        // }
                     }
-                    await _context.SaveChangesAsync();
+                    // try
+                    // {
+                    //     await _context.SaveChangesAsync();
+                    // }
+                    // catch (Exception e)
+                    // {
 
-                    return Ok(result);
+                    //     throw new Exception(e.Message);
+                    // }
+                    return Ok(news);
                 }
 
                 return NotFound();

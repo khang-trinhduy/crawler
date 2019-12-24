@@ -1,7 +1,7 @@
 using Crawler.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Crawler.Data
+namespace Crawler.DataContext
 {
     public class CrawlerContext : DbContext
     {

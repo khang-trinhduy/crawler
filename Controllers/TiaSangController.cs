@@ -9,29 +9,27 @@ using Microsoft.Extensions.Configuration;
 
 namespace Crawler.Controllers
 {
-    [ApiController]
-    public class SaigonsController : SpidersController
+    public class TiaSangController : SpidersController
     {
-        public SaigonsController(CrawlerContext context, IConfiguration config) : base(context, config)
+        public TiaSangController(CrawlerContext context, IConfiguration config) : base(context, config)
         {
         }
-        public override async Task<ActionResult<IEnumerable<New>>> GetTopNews([FromQuery] int quantity, [FromQuery] string subject)
+
+        public async override Task<ActionResult<IEnumerable<New>>> GetTopNews([FromQuery] int quantity, [FromQuery] string subject)
         {
             if (quantity > 0)
             {
                 var result = new Result();
-                Website saigon = new Saigon();
-                saigon.SetUrl("https://www.sggp.org.vn");
-                var news = await saigon.GetTopNews(quantity, subject);
+                Website bds = new TiaSang();
+                var news = await bds.GetTopNews(quantity, subject);
                 if (news != null)
                 {
                     foreach (var n in news)
                     {
                         result.Total++;
-                        var exist = _context.News.FirstOrDefault(e => e.Url == n.Url && e.Title == n.Title);
-                        if (exist == null)
+                        var exist = _context.News.FirstOrDefault(e => e.Title == n.Title);
+                        if (exist is null)
                         {
-
                             try
                             {
                                 var post = PostCreateModel.Create(n);
@@ -42,6 +40,7 @@ namespace Crawler.Controllers
                                 Wordpress.CreateAsync(post);
                                 _context.News.Add(n);
                                 result.Published++;
+
                             }
                             catch (System.Exception e)
                             {
@@ -50,10 +49,11 @@ namespace Crawler.Controllers
 
                         }
                     }
-
                     await _context.SaveChangesAsync();
                     return Ok(result);
                 }
+
+                return NotFound();
             }
             return BadRequest(nameof(quantity));
         }
