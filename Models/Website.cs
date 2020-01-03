@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Crawler.Models
@@ -28,8 +29,17 @@ namespace Crawler.Models
             else {
                 content = content.Replace("<a", "<i");
                 content = content.Replace("</a", "</i");
+                content = content.Replace("vnexpress.net", "vnexpress", StringComparison.OrdinalIgnoreCase);
+                content = content.Replace("vnexpress.com", "vnexpress", StringComparison.OrdinalIgnoreCase);
+                content = content.Replace("CafeF.vn", "cafef", StringComparison.OrdinalIgnoreCase);
+                
+                content = content.Replace("cafeland.vn", "cafeland", StringComparison.OrdinalIgnoreCase);
+                content = content.Replace("ndh.vn", "ndh", StringComparison.OrdinalIgnoreCase);
+                content = content.Replace("sggp.org.vn", "sggp", StringComparison.OrdinalIgnoreCase);
+                content = content.Replace("tiasang.com.vn", "tiasang", StringComparison.OrdinalIgnoreCase);
             }
             return content;
         }
+
     }
 }

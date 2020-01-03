@@ -19,46 +19,43 @@ namespace Crawler.Controllers
         {
             if (quantity > 0)
             {
+                var result = new Result();
                 Website bds = new Tuoitre();
                 var news = await bds.GetTopNews(quantity, subject);
                 if (news != null)
                 {
                     foreach (var n in news)
                     {
-                        var exist = _context.News.FirstOrDefault(e => e.Url == n.Url && e.Title == n.Title);
-                        // if (exist == null)
-                        // {
-                        // _context.News.Add(n);
+                        result.Total++;
+                        var existed = _context.News.FirstOrDefault(e => e.Title.ToLower() == n.Title);
+                        if (existed != null)
+                        {
+                            continue;
+                        }
+
                         try
                         {
                             var post = PostCreateModel.Create(n);
                             if (post == null)
                             {
-                                // continue;
+                                continue;
                             }
-                            await CreatePost(post);
+                            Wordpress.CreateAsync(post);
+                            _context.News.Add(n);
+                            result.Published++;
 
                         }
                         catch (System.Exception e)
                         {
-                            // continue;
-                            return BadRequest(e.Message);
+                            continue;
                         }
-                        // }
-                    }
-                    // try
-                    // {
-                    //     await _context.SaveChangesAsync();
-                    // }
-                    // catch (Exception e)
-                    // {
 
-                    //     throw new Exception(e.Message);
-                    // }
-                    return Ok(news);
+                    }
+                    await _context.SaveChangesAsync();
+
+                    return Ok(result);
                 }
 
-                return NotFound();
             }
             return BadRequest(nameof(quantity));
         }

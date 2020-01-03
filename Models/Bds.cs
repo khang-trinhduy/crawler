@@ -116,13 +116,24 @@ namespace Crawler.Models
         {
             ////*[contains(@class, "prj-noidung")]/div/p
             var doc = await GetDocuments(url);
-            string contents = "", rendered = "", description = "";
+            string contents = "", description = "";
             var title = doc.DocumentNode.SelectSingleNode("/html/body/form/div[4]/div[6]/h1");
             // title = Decode(title);
             description = doc.DocumentNode.SelectSingleNode("/html/body/form/div[4]/div[6]/span[1]") != null ? doc.DocumentNode.SelectSingleNode("/html/body/form/div[4]/div[6]/span[1]").InnerText : string.Empty;
             var paragraphs = doc.DocumentNode.SelectNodes("/html/body/form/div[4]/div[8]/div[1]/p") != null ? doc.DocumentNode.SelectNodes("/html/body/form/div[4]/div[8]/div[1]/p") : null;
             paragraphs = paragraphs != null ? paragraphs : doc.DocumentNode.SelectNodes("//*[contains(@class, \"prj-noidung\")]/div/p");
-            rendered = doc.DocumentNode.SelectSingleNode("/html/body/form/div[4]/div[8]/div[1]") != null ? doc.DocumentNode.SelectSingleNode("/html/body/form/div[4]/div[8]/div[1]").OuterHtml : string.Empty;
+            var rendered = doc.DocumentNode.SelectSingleNode("/html/body/form/div[4]/div[8]/div[1]");
+            if (rendered != null)
+            {
+                foreach (var item in rendered.ChildNodes)
+                {
+                    if (item.InnerHtml.Trim() != "")
+                    {
+                        item.InnerHtml = item.InnerHtml.Replace("batdongsan.com", "batdongsan", StringComparison.OrdinalIgnoreCase);
+                        item.InnerHtml = item.InnerHtml.Replace("batdongsan.com.vn", "batdongsan", StringComparison.OrdinalIgnoreCase);
+                    }
+                }
+            }
             var img = doc.DocumentNode.SelectSingleNode("/html/body/form/div[4]/div[6]/div[2]/div/div/div[1]/div/div[1]/div/img").Attributes["src"].Value;
             var general = doc.DocumentNode.SelectSingleNode("/html/body/form/div[4]/div[6]/div[2]/div/div/div[2]");
             var table = GetTable(general);
@@ -137,7 +148,7 @@ namespace Crawler.Models
             return new New
             (
                 title.InnerText,
-                rendered,
+                rendered.OuterHtml,
                 description,
                 "batdongsan.com" + "-" + Type,
                 img,

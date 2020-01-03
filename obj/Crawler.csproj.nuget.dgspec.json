@@ -45,10 +45,14 @@
               "target": "Package",
               "version": "[1.2.1, )"
             },
+            "Microsoft.AspNetCore": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
             "Microsoft.AspNetCore.App": {
               "suppressParent": "All",
               "target": "Package",
-              "version": "[2.2.0, )",
+              "version": "[2.2.6, )",
               "autoReferenced": true
             },
             "Microsoft.AspNetCore.Razor.Design": {
@@ -59,7 +63,7 @@
             "Microsoft.NETCore.App": {
               "suppressParent": "All",
               "target": "Package",
-              "version": "[2.2.0, )",
+              "version": "[2.2.6, )",
               "autoReferenced": true
             },
             "WordpressSharp.Core": {
@@ -80,6 +84,11 @@
           ],
           "assetTargetFallback": true,
           "warn": true
+        }
+      },
+      "runtimes": {
+        "linux-x64": {
+          "#import": []
         }
       }
     }

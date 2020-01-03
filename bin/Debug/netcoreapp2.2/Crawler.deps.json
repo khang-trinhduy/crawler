@@ -25,6 +25,7 @@
       "Crawler/1.0.0": {
         "dependencies": {
           "HtmlAgilityPack.CssSelectors.NetCore": "1.2.1",
+          "Microsoft.AspNetCore": "2.2.0",
           "Microsoft.AspNetCore.App": "2.2.0",
           "Microsoft.AspNetCore.Razor.Design": "2.2.0",
           "Microsoft.NETCore.App": "2.2.0",

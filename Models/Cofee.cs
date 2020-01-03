@@ -67,6 +67,7 @@ namespace Crawler.Models
             else if (type == "s")
             {
                 SetUrl("http://cafef.vn/timeline/114/trang-1.chn");
+                this.Categories = "2005";
             }
             else if (type == "tt")
             {

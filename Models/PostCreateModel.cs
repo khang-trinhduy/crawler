@@ -17,6 +17,7 @@ namespace Crawler.Models
         public List<string> categories { get; set; } = new List<string>();
         public List<string> tags { get; set; } = new List<string>();
         public string img { get; set; }
+        public bool Bds { get; set; }
 
         public static PostCreateModel Create(New n)
         {
@@ -27,9 +28,13 @@ namespace Crawler.Models
                 var taglist = n.Tags.Trim().Split('-');
                 foreach (var tag in taglist)
                 {
-                    if (tag.Trim() == "www.sggp.org.vn" || tag.Trim() == "cafef.vn")
+                    if (tag.Trim() == "www.sggp.org.vn" || tag.Trim() == "cafef.vn" || tag.Trim() == "vneconomy.vn" || tag.Trim() == "tuoitre.vn")
                     {
                         item.Sggp = true;
+                    }
+                    else if (tag.Trim() == "batdongsan.com")
+                    {
+                        item.Bds = true;
                     }
                     if (tag.Trim() != "")
                     {

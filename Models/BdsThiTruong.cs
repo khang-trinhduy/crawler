@@ -90,6 +90,21 @@ namespace Crawler.Models
                     contents.RemoveChild(item);
                 }
             }
+            if (contents != null)
+            {
+                foreach (var item in contents.ChildNodes)
+                {
+                    if (item.InnerHtml.Trim() != "")
+                    {
+                        if (item.InnerHtml.Contains("<img"))
+                        {
+                            continue;
+                        }
+                        item.InnerHtml = item.InnerHtml.Replace("batdongsan.com", "batdongsan", StringComparison.OrdinalIgnoreCase);
+                        item.InnerHtml = item.InnerHtml.Replace("batdongsan.com.vn", "batdongsan", StringComparison.OrdinalIgnoreCase);
+                    }
+                }
+            }
             string auth = trash != null ? trash.InnerText : "";
             var img = contents.ChildNodes.Where(e => e.Name == "p" && e.FirstChild != null && e.FirstChild.Name == "img").FirstOrDefault();
             var image = img != null ? img.FirstChild.Attributes["src"].Value : "";

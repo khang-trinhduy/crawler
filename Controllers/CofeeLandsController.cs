@@ -25,6 +25,10 @@ namespace Crawler.Controllers
                 {
                     bds = new CofeeLandDa();
                 }
+                else if (subject == "bds")
+                {
+                    bds = new CofeeLandBds();
+                }
                 var news = await bds.GetTopNews(quantity, subject);
                 if (news != null)
                 {

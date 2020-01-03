@@ -19,7 +19,7 @@ namespace Crawler.Models
             var config = new WordPressSiteConfig
             {
                 Username = "crawler",
-                Password = "qwer001",
+                Password = "PLkus6X%n5H!$j(E@$OzN@TD",
                 BaseUrl = "https://www.saigontown.com/",
                 BlogId = 1
             };
@@ -86,6 +86,11 @@ namespace Crawler.Models
                         realImg += ".jpg";
                     }
                 }
+                // if (_post.Bds)
+                // {
+                //     client.NewPost(post);
+                //     return;
+                // }
                 var featureImage = Data.CreateFromUrl(realImg);
                 var media = client.UploadFile(featureImage);
                 post.FeaturedImageId = media.Id;

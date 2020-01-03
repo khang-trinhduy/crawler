@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
+using HtmlAgilityPack.CssSelectors;
 
 namespace Crawler.Models
 {
@@ -12,30 +14,37 @@ namespace Crawler.Models
             if (type == "ts")
             {
                 SetUrl("http://vneconomy.vn/timeline/9920/trang-1.htm");
+                this.Categories = "110-139";
             }
             else if (type == "tc")
             {
                 SetUrl("http://vneconomy.vn/timeline/6/trang-1.htm");
+                this.Categories = "53";
             }
             else if (type == "ck" || type == "")
             {
                 SetUrl("http://vneconomy.vn/timeline/7/trang-1.htm");
+                this.Categories = "34";
             }
             else if (type == "dn")
             {
                 SetUrl("http://vneconomy.vn/timeline/5/trang-1.htm");
+                this.Categories = "46";
             }
             else if (type == "do")
             {
                 SetUrl("http://vneconomy.vn/timeline/17/trang-1.htm");
+                this.Categories = "64";
             }
             else if (type == "tt")
             {
                 SetUrl("http://vneconomy.vn/timeline/19/trang-1.htm");
+                this.Categories = "64";
             }
             else if (type == "tg")
             {
                 SetUrl("http://vneconomy.vn/timeline/99/trang-1.htm");
+                this.Categories = "33";
             }
             else if (type == "css")
             {
@@ -54,9 +63,17 @@ namespace Crawler.Models
             List<New> news = new List<New>();
             for (int i = 0; i < quantity; i++)
             {
-                var n = await GetContents("http://vneconomy.vn/" + links[i]);
-                n.Url = "http://vneconomy.vn/" + links[i];
-                news.Add(n);
+                try
+                {
+                    var n = await GetContents("http://vneconomy.vn/" + links[i]);
+                    n.Url = "http://vneconomy.vn/" + links[i];
+                    news.Add(n);
+                    
+                }
+                catch (System.Exception)
+                {
+                    continue;
+                }
             }
             return news;
         }
@@ -72,34 +89,41 @@ namespace Crawler.Models
         private async Task<New> GetContents(string url)
         {
             var doc = await GetDocuments(url);
-            string title = "", description = "", contents = "", author = "", source = string.Empty;
-            title = doc.DocumentNode.SelectSingleNode("//div[contains(@class, \"contentleft\")]/*[contains(@class, \"title\")]") != null ? doc.DocumentNode.SelectSingleNode("//div[contains(@class, \"left_cate\")]/*[contains(@class, \"title\")]").InnerText : string.Empty;
-            description = doc.DocumentNode.SelectSingleNode("//*[contains(@class, 'sapo')]") != null ? doc.DocumentNode.SelectSingleNode("//*[contains(@class, 'sapo')]").InnerText : string.Empty;
-            var paragraphs = doc.DocumentNode.SelectNodes("//*[@id=\"mainContent\"]/p") != null ? doc.DocumentNode.SelectNodes("//*[@id=\"mainContent\"]/p") : null;
-            foreach (var para in paragraphs)
-            {
-                contents += para != null ? para.InnerText : string.Empty;
-            }
-            author = doc.DocumentNode.SelectSingleNode("//*[@id=\"contentdetail\"]/p[1]") != null ? doc.DocumentNode.SelectSingleNode("//*[@id=\"contentdetail\"]/p[1]").InnerText : string.Empty;
-            source = doc.DocumentNode.SelectSingleNode("//*[@id=\"contentdetail\"]/p[2]") != null ? doc.DocumentNode.SelectSingleNode("//*[@id=\"contentdetail\"]/p[2]").InnerText : string.Empty;
-            var rendered = doc.DocumentNode.SelectSingleNode("/html/body/form/div[2]/div[3]/div[4]/div[1]/div[1]/div[4]") != null ? doc.DocumentNode.SelectSingleNode("/html/body/form/div[2]/div[3]/div[4]/div[1]/div[1]/div[4]").OuterHtml : "";
+            string title = "", description = "", source = string.Empty;
+            var contentpage = doc.DocumentNode.SelectSingleNode("//div[contains(@class, \"contentleft\")]");
+            title = contentpage.ChildNodes.Where(e => e.Name == "h1").FirstOrDefault().InnerText;
+            var trashy = doc.DocumentNode.SelectSingleNode("//div[contains(@class, \"sharemxhtop\")]");
+            var des = "<i>" +  doc.DocumentNode.SelectSingleNode("//h2[contains(@class, \"sapo\")]").InnerText + "</i>";
+            var boxcontent = doc.DocumentNode.SelectSingleNode("//div[contains(@class, \"boxcontent\")]");
+            description = "<i>" + contentpage.ChildNodes.Where(e => e.Name == "h2").FirstOrDefault().InnerText + "</i>";
+            var auth = doc.DocumentNode.SelectSingleNode("//div[contains(@class, \"author\")]");
+            boxcontent.RemoveChild(auth);
+            var image = doc.DocumentNode.SelectSingleNode("//div[contains(@class, \"imgdetail\")]");
+            var img = image.ChildNodes.FirstOrDefault(e => e.Name == "img").Attributes["src"].Value;
             return new New
             (
                 title,
-                rendered,"", 
-                source,"",""
+                des + image.InnerHtml + boxcontent.InnerHtml,des, 
+                "vneconomy.vn-" + auth.InnerText, img,this.Categories
             );
         }
         private async Task<List<string>> GetLinks()
         {
             HtmlDocument docs = await GetDocuments(this.Url);
-            var articles = docs.DocumentNode.SelectNodes("/html/body/li/div/h3/a");
+            var li = docs.DocumentNode.ChildNodes.Where(e => e.Name == "li").ToList();
             List<string> links = new List<string>();
-            foreach (var a in articles)
+            for (int i = 0; i < li.Count; i++)
             {
-                links.Add(a.Attributes["href"].Value);
+                var info = li[i].ChildNodes.FirstOrDefault(e => e.HasClass("infonews"));
+                if (info != null)
+                {
+                    var a = info.ChildNodes.FirstOrDefault(e => e.Name == "a");
+                    if (a != null)
+                    {
+                        links.Add(a.Attributes["href"].Value);
+                    }
+                }
             }
-
             return links;
         }
         public override string GetUrl()

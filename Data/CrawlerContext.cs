@@ -12,6 +12,10 @@ namespace Crawler.DataContext
         {
         }
 
+        public CrawlerContext()
+        {
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Vne>().HasBaseType<Website>();

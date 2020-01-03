@@ -19,12 +19,19 @@ namespace Crawler.Controllers
         {
             if (quantity > 0)
             {
+                var result = new Result();
                 Website cofee = new Vneco();
                 var news = await cofee.GetTopNews(quantity, subject);
                 if (news != null)
                 {
                     foreach (var n in news)
                     {
+                        result.Total++;
+                        var existed = _context.News.FirstOrDefault(e => e.Title.ToLower() == n.Title);
+                        if (existed != null)
+                        {
+                            continue;
+                        }
 
                         try
                         {
@@ -34,6 +41,8 @@ namespace Crawler.Controllers
                                 continue;
                             }
                             Wordpress.CreateAsync(post);
+                            _context.News.Add(n);
+                            result.Published++;
 
                         }
                         catch (System.Exception e)
@@ -42,8 +51,9 @@ namespace Crawler.Controllers
                         }
 
                     }
+                    await _context.SaveChangesAsync();
 
-                    return Ok(news);
+                    return Ok(result);
                 }
             }
             return BadRequest(nameof(quantity));
