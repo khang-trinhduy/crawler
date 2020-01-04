@@ -81,7 +81,7 @@ namespace Crawler.Models
                 if (!_post.Sggp)
                 {
                     realImg = _post.img.Split("_")[0];
-                    if (!realImg.Contains(".jpg"))
+                    if (!realImg.Contains(".jpg") && !realImg.Contains(".jpeg"))
                     {
                         realImg += ".jpg";
                     }

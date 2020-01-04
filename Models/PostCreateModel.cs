@@ -32,14 +32,13 @@ namespace Crawler.Models
                     {
                         item.Sggp = true;
                     }
-                    else if (tag.Trim() == "batdongsan.com")
+                    else if (tag.Trim() == "batdongsan.com" || tag.Trim() == "fackcheck.vn")
                     {
                         item.Bds = true;
                     }
                     if (tag.Trim() != "")
                     {
                         item.tags.Add(tag.Trim());
-
                     }
                 }
             }
