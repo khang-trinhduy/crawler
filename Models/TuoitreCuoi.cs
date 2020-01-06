@@ -7,7 +7,7 @@ using HtmlAgilityPack.CssSelectors;
 
 namespace Crawler.Models
 {
-    public class Nhadat : Website
+    public class Tuoitrecuoi : Website
     {
         public override async Task<List<New>> GetTopNews(int quantity, string type)
         {
@@ -64,27 +64,31 @@ namespace Crawler.Models
             var doc = await GetDocuments(url);
             string title = doc.DocumentNode.SelectSingleNode("//article[contains(@class, \"art-header\")]").ChildNodes.FirstOrDefault(e => e.Name == "h1").InnerText;
             var contentpage = doc.DocumentNode.SelectSingleNode("//article[contains(@class, \"art-body\")]");
-            title = contentpage.ChildNodes.Where(e => e.Name == "h1").FirstOrDefault().InnerText;
-            var trashy = doc.DocumentNode.SelectSingleNode("//span[contains(@class, \"_dateTime\")]");
-            var other = doc.DocumentNode.SelectSingleNode("//div[contains(@class, \"mbnd_detail_descripton\")]");
-            var btm = doc.DocumentNode.SelectSingleNode("//div[contains(@class, \"__DesFull\")]");
-            contentpage.RemoveChild(btm);
-            var author = other.ChildNodes.LastOrDefault(e => e.HasClass("pull-right"));
+            var relate = doc.DocumentNode.SelectSingleNode("//div[contains(@class, \"block-related\")]");
+            var tool = contentpage.ChildNodes.LastOrDefault(e => e.Name == "div");
+            string auth = "";
+            var author = doc.DocumentNode.SelectSingleNode("//p[contains(@class, \"author\")]");
             if (author != null)
             {
-                other.RemoveChild(author);
+                auth = author.InnerText;
+            }
+            if (relate != null)
+            {
+                contentpage.RemoveChild(relate);
                 
             }
-            contentpage.RemoveChild(trashy);
-            contentpage.AppendChild(other);
-            var des = "<i>" +  doc.DocumentNode.SelectSingleNode("//div[contains(@class, \"_DesSummary\")]").InnerText + "</i>";
-            var auth = "MuaBanNhaDat";
-            var image = doc.DocumentNode.SelectSingleNode("//img[contains(@class, \"img-thumbnail\")]").Attributes["src"].Value;
+            if (tool != null)
+            {
+                contentpage.RemoveChild(tool);
+                
+            }
+            var des = "<i>" +  doc.DocumentNode.SelectSingleNode("//h2[contains(@class, \"summary\")]").InnerText + "</i>";
+            var image = doc.DocumentNode.SelectSingleNode("//div[contains(@class, \"wrapper-img\")]").ChildNodes.FirstOrDefault(e => e.Name == "img").Attributes["src"].Value;
             return new New
             (
                 title,
                 contentpage.InnerHtml,des, 
-                auth, image,this.Categories
+                "cuoi.tuoitre.vn-" + auth, image,this.Categories
             );
         }
         private async Task<List<string>> GetLinks()
@@ -95,7 +99,7 @@ namespace Crawler.Models
             for (int i = 0; i < articles.Count; i++)
             {
                 var a = articles[i].ChildNodes.FirstOrDefault(e => e.Name == "a");
-                links.Add(a[i].Attributes["href"].Value);
+                links.Add("https://cuoi.tuoitre.vn/" + a.Attributes["href"].Value);
             }
             return links;
         }
