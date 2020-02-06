@@ -29,10 +29,14 @@ namespace Crawler.Models
             List<New> news = new List<New>();
             for (int i = 0; i < quantity; i++)
             {
-                var n = await GetContents("https://batdongsan.com.vn" + links[i].Link);
-                n.Url = "https://batdongsan.com.vn" + links[i].Link;
-                n.Title = links[i].Title;
-                news.Add(n);
+                if (i < links.Count)
+                {
+                    var n = await GetContents("https://batdongsan.com.vn" + links[i].Link);
+                    n.Url = "https://batdongsan.com.vn" + links[i].Link;
+                    n.Title = links[i].Title;
+                    news.Add(n);
+                        
+                }
             }
             return news;
         }

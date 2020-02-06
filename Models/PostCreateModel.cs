@@ -28,7 +28,7 @@ namespace Crawler.Models
                 var taglist = n.Tags.Trim().Split('-');
                 foreach (var tag in taglist)
                 {
-                    if (tag.Trim() == "topbank.vn" || tag.Trim() == "conglyxahoi.net.vn" || tag.Trim() == "www.sggp.org.vn" || tag.Trim() == "cafef.vn" || tag.Trim() == "vneconomy.vn" || tag.Trim() == "cuoi.tuoitre.vn" || tag.Trim() == "tuoitre.vn")
+                    if (tag.Trim() == "topbank.vn" || tag.Trim() == "vietnambiz" || tag.Trim() == "conglyxahoi.net.vn" || tag.Trim() == "www.sggp.org.vn" || tag.Trim() == "cafef.vn" || tag.Trim() == "vneconomy.vn" || tag.Trim() == "cuoi.tuoitre.vn" || tag.Trim() == "tuoitre.vn")
                     {
                         item.Sggp = true;
                     }
